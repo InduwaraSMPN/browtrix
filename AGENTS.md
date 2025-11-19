@@ -9,7 +9,7 @@
 
 ### Backend (Python)
 - `cd browtrix/apps/server && bun run dev` - Run Python backend with uv
-- `cd browtrix/apps/server && uv run main.py` - Direct Python execution
+- `cd browtrix/apps/server && uv run python -m src.browtrix_server` - Direct Python execution
 
 ### Monorepo (Turbo)
 - `cd browtrix && bun run dev` - Run all apps in development

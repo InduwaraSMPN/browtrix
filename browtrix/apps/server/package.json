@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "uv run browtrix-server",
+    "dev": "uv run python -m src.browtrix_server",
     "build": "echo 'Build not required for Python backend'"
   }
 }

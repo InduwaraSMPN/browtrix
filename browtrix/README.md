@@ -85,7 +85,7 @@ bun run dev
 
 This will start:
 - 🌐 **Frontend**: http://localhost:3001
-- 🐍 **Backend**: Running via `uv run main.py`
+- 🐍 **Backend**: Running via `uv run python -m src.browtrix_server`
 
 **Start only the frontend:**
 ```bash

@@ -27,7 +27,7 @@ Start the development server:
 npm run dev
 
 # Or directly with uv
-uv run main.py
+uv run python -m src.browtrix_server
 ```
 
 The server will start on `http://0.0.0.0:8000` with HTTP transport enabled.
