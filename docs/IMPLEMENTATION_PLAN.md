@@ -24,8 +24,24 @@ Update `browtrix/apps/server/pyproject.toml` to include:
 - `fastapi`
 - `uvicorn[standard]`
 - `websockets`
+- `pydantic-settings`
 
-#### 1.2 Connection Manager (`browtrix/apps/server/connection_manager.py`)
+#### 1.2 Directory Structure
+Adopt the `fastmcp` example structure:
+```
+browtrix/apps/server/
+├── src/
+│   └── browtrix_server/
+│       ├── __init__.py
+│       ├── __main__.py
+│       ├── connection_manager.py
+│       ├── server.py
+│       └── settings.py
+├── fastmcp.json
+└── pyproject.toml
+```
+
+#### 1.3 Connection Manager (`src/browtrix_server/connection_manager.py`)
 Create a class `ConnectionManager` that:
 - Stores active `WebSocket` connections.
 - Stores pending requests (`dict[str, asyncio.Future]`).
@@ -40,17 +56,23 @@ Create a class `ConnectionManager` that:
     - Parse incoming JSON.
     - If it's a result (`CONFIRM_RESULT`, etc.), resolve the corresponding `Future`.
 
-#### 1.3 Server Entry Point (`browtrix/apps/server/main.py`)
+#### 1.4 Settings (`src/browtrix_server/settings.py`)
+Implement configuration using `pydantic-settings`:
+- Host, Port, Log Level.
+
+#### 1.5 Server Logic (`src/browtrix_server/server.py`)
 Refactor to use `FastAPI` as the main wrapper to support WebSockets alongside FastMCP.
 - Initialize `FastAPI` app.
 - Initialize `FastMCP` server.
-- Mount `FastMCP` or expose its tools.
-    - *Note*: Since `FastMCP` manages its own lifecycle, we might need to run it as a sub-app or route its requests. The cleanest way is likely to use `FastAPI` for the WS endpoint and `FastMCP` for the MCP logic, running in the same process.
+- Mount `FastMCP` app to FastAPI.
 - Add `@app.websocket("/ws")` endpoint that uses `ConnectionManager`.
 - Implement MCP Tools:
     - `browtrix_html_snapshot()`: Calls `manager.send_request("GET_SNAPSHOT")`.
     - `browtrix_confirmation_alert(message)`: Calls `manager.send_request("SHOW_CONFIRM", {msg})`.
     - `browtrix_question_popup(question)`: Calls `manager.send_request("SHOW_INPUT", {question})`.
+
+#### 1.6 Entry Point (`src/browtrix_server/__main__.py`)
+- Use `uvicorn` to run the app based on settings.
 
 ### Phase 2: Frontend Foundation (Next.js)
 
@@ -92,7 +114,7 @@ This component will live in the root layout or page.
 ### Phase 4: Integration & Verification
 
 #### 4.1 Development Workflow
-1. Start Server: `cd browtrix/apps/server && uv run main.py` (Ensure it runs uvicorn with WS support).
+1. Start Server: `cd browtrix/apps/server && uv run browtrix-server`.
 2. Start Web: `cd browtrix/apps/web && bun dev`.
 3. Open Browser: `http://localhost:3001`.
 
@@ -103,16 +125,14 @@ This component will live in the root layout or page.
 
 ## 4. Detailed File Changes
 
-### `apps/server/connection_manager.py`
+### `apps/server/src/browtrix_server/connection_manager.py`
 - Class `ConnectionManager` with `active_connections: List[WebSocket]` and `pending_futures: Dict[str, Future]`.
 
-### `apps/server/main.py`
+### `apps/server/src/browtrix_server/server.py`
 - Import `FastAPI`, `WebSocket`.
 - Create `app = FastAPI()`.
 - Define `@mcp.tool` functions that await `manager.request(...)`.
-- Run using `uvicorn.run(app, ...)` if wrapping, or ensure `FastMCP` exposes the loop.
-    - *Refinement*: FastMCP uses `starlette` underneath. We can likely access the underlying app or run our own loop.
-    - *Plan B*: If FastMCP integration is tricky, use `mcp._app` (if exists) or run FastMCP on port 8000 and WS on 8001? *Prefer single port*. We will try to mount FastMCP on FastAPI.
+- Mount `mcp.http_app()` to FastAPI.
 
 ### `apps/web/src/components/browtrix-overlay.tsx`
 - Uses `shadcn/ui` components (`Dialog`, `AlertDialog`, `Button`, `Input`).
