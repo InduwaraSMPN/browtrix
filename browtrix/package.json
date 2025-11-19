@@ -10,6 +10,7 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "check-types": "turbo check-types",
+    "lint": "turbo lint",
     "dev:native": "turbo -F native dev",
     "dev:web": "turbo -F web dev"
   },
