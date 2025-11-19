@@ -2,19 +2,19 @@
 """
 Test script to verify MCP server tools are accessible
 """
+
 import asyncio
 import httpx
-import json
 
 
 async def test_mcp_tools():
     """Test the MCP server tools via HTTP"""
     base_url = "http://localhost:8000"
-    
+
     print("🔍 Testing Browtrix MCP Server...")
     print(f"📡 Server URL: {base_url}")
     print()
-    
+
     async with httpx.AsyncClient(timeout=30.0) as client:
         # Test 1: Check SSE endpoint
         print("1️⃣  Testing SSE endpoint...")
@@ -23,7 +23,7 @@ async def test_mcp_tools():
             if response.status_code == 200:
                 print("   ✅ SSE endpoint is accessible")
                 # Read first few lines
-                lines = response.text.split('\n')[:5]
+                lines = response.text.split("\n")[:5]
                 for line in lines:
                     if line.strip():
                         print(f"   📨 {line}")
@@ -31,15 +31,15 @@ async def test_mcp_tools():
                 print(f"   ❌ SSE endpoint returned {response.status_code}")
         except Exception as e:
             print(f"   ❌ Error: {e}")
-        
+
         print()
-        
+
         # Test 2: List available tools
         print("2️⃣  Attempting to list MCP tools...")
         print("   ℹ️  Note: This requires a proper MCP client connection")
         print("   ℹ️  The server is configured with SSE transport")
         print()
-        
+
         # Test 3: Check WebSocket endpoint
         print("3️⃣  Testing WebSocket endpoint...")
         try:
@@ -48,7 +48,7 @@ async def test_mcp_tools():
             print("   ℹ️  This is for browser connections, not MCP clients")
         except Exception as e:
             print(f"   ❌ Error: {e}")
-        
+
         print()
         print("📋 Summary:")
         print("   • MCP Server is running on port 8000")

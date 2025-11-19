@@ -2,9 +2,11 @@
 """
 Quick test to verify Browtrix MCP server configuration
 """
+
 import subprocess
 import json
 import sys
+
 
 def test_mcp_config():
     """Test the MCP configuration"""
@@ -12,13 +14,13 @@ def test_mcp_config():
     print("🧪 Browtrix MCP Server Configuration Test")
     print("=" * 60)
     print()
-    
+
     # 1. Check MCP config file
     print("1️⃣  Checking MCP configuration...")
     try:
         with open("/home/pasindui/.gemini/antigravity/mcp_config.json", "r") as f:
             config = json.load(f)
-            
+
         if "browtrix" in config.get("mcpServers", {}):
             print("   ✅ Browtrix server found in MCP config")
             browtrix_config = config["mcpServers"]["browtrix"]
@@ -32,17 +34,13 @@ def test_mcp_config():
     except Exception as e:
         print(f"   ❌ Error reading config: {e}")
         return False
-    
+
     print()
-    
+
     # 2. Check if server is running
     print("2️⃣  Checking if server is running...")
     try:
-        result = subprocess.run(
-            ["lsof", "-i", ":8000"],
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(["lsof", "-i", ":8000"], capture_output=True, text=True)
         if "browtrix" in result.stdout:
             print("   ✅ Browtrix server is running on port 8000")
         else:
@@ -50,9 +48,9 @@ def test_mcp_config():
             print(f"   {result.stdout}")
     except Exception as e:
         print(f"   ❌ Error checking server: {e}")
-    
+
     print()
-    
+
     # 3. Check server endpoints
     print("3️⃣  Checking server endpoints...")
     try:
@@ -60,11 +58,11 @@ def test_mcp_config():
             ["curl", "-s", "-m", "2", "http://localhost:8000/sse"],
             capture_output=True,
             text=True,
-            timeout=3
+            timeout=3,
         )
         if "event: endpoint" in result.stdout:
             print("   ✅ SSE endpoint is responding")
-            lines = result.stdout.split('\n')[:3]
+            lines = result.stdout.split("\n")[:3]
             for line in lines:
                 if line.strip():
                     print(f"      {line}")
@@ -74,9 +72,9 @@ def test_mcp_config():
         print("   ✅ SSE endpoint is streaming (timeout expected)")
     except Exception as e:
         print(f"   ⚠️  Error: {e}")
-    
+
     print()
-    
+
     # 4. Summary
     print("=" * 60)
     print("📊 Summary")
@@ -99,8 +97,9 @@ def test_mcp_config():
     print("   4. Test MCP tools from Antigravity")
     print()
     print("=" * 60)
-    
+
     return True
+
 
 if __name__ == "__main__":
     success = test_mcp_config()
