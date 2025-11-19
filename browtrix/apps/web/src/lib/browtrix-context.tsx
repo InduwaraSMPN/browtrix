@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from "react";
 
 interface BrowtrixContextType {
   isConnected: boolean;
@@ -16,7 +16,7 @@ export function BrowtrixProvider({ children }: { children: React.ReactNode }) {
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const connect = () => {
+  const connect = useCallback(() => {
     const ws = new WebSocket("ws://localhost:8000/ws");
 
     ws.onopen = () => {
@@ -47,7 +47,7 @@ export function BrowtrixProvider({ children }: { children: React.ReactNode }) {
     };
 
     wsRef.current = ws;
-  };
+  }, []);
 
   useEffect(() => {
     connect();
@@ -59,15 +59,15 @@ export function BrowtrixProvider({ children }: { children: React.ReactNode }) {
         clearTimeout(reconnectTimeoutRef.current);
       }
     };
-  }, []);
+  }, [connect]);
 
-  const sendMessage = (msg: any) => {
+  const sendMessage = useCallback((msg: any) => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       wsRef.current.send(JSON.stringify(msg));
     } else {
       console.warn("Cannot send message, WS not connected");
     }
-  };
+  }, []);
 
   return (
     <BrowtrixContext.Provider value={{ isConnected, lastMessage, sendMessage }}>

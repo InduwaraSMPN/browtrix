@@ -39,11 +39,9 @@ export function BrowtrixOverlay() {
       setInputValue("");
       setError("");
     } else if (type === "ABORT_UI") {
-        if (activeRequest && activeRequest.id === id) {
-            setActiveRequest(null);
-        }
+      setActiveRequest((prev) => (prev && prev.id === id ? null : prev));
     }
-  }, [lastMessage]);
+  }, [lastMessage, sendMessage]);
 
   const handleConfirm = (approved: boolean) => {
     if (!activeRequest) return;
