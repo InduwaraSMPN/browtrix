@@ -3,20 +3,20 @@
 ## Build/Lint/Test Commands
 
 ### Web App (Next.js)
-- `cd browtrix/apps/web && npm run dev` - Start development server on port 3001
-- `cd browtrix/apps/web && npm run build` - Build production bundle
-- `cd browtrix/apps/web && npm run start` - Start production server
+- `cd browtrix/apps/web && bun run dev` - Start development server on port 3001
+- `cd browtrix/apps/web && bun run build` - Build production bundle
+- `cd browtrix/apps/web && bun run start` - Start production server
 
 ### Backend (Python)
-- `cd browtrix/apps/server && npm run dev` - Run Python backend with uv
+- `cd browtrix/apps/server && bun run dev` - Run Python backend with uv
 - `cd browtrix/apps/server && uv run main.py` - Direct Python execution
 
 ### Monorepo (Turbo)
-- `cd browtrix && npm run dev` - Run all apps in development
-- `cd browtrix && npm run build` - Build all apps
-- `cd browtrix && npm run check-types` - Type check all apps
-- `cd browtrix && npm run dev:web` - Run only web app
-- `cd browtrix && npm run dev:native` - Run only native apps
+- `cd browtrix && bun run dev` - Run all apps in development
+- `cd browtrix && bun run build` - Build all apps
+- `cd browtrix && bun run check-types` - Type check all apps
+- `cd browtrix && bun run dev:web` - Run only web app
+- `cd browtrix && bun run dev:native` - Run only native apps
 
 ## Code Style Guidelines
 
