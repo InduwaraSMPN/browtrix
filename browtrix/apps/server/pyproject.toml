@@ -1,9 +1,20 @@
 [project]
-name = "backend"
+name = "browtrix-server"
 version = "0.1.0"
-description = "Add your description here"
+description = "Browtrix MCP Server"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "fastmcp>=2.13.1",
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.29.0",
+    "websockets>=12.0",
+    "pydantic-settings>=2.0.0"
 ]
+
+[project.scripts]
+browtrix-server = "browtrix_server.__main__:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://gofastmcp.com/public/schemas/fastmcp.json/v1.json",
+  "source": {
+    "path": "src/browtrix_server/server.py"
+  },
+  "environment": {
+    "dependencies": [
+      "browtrix-server@."
+    ]
+  }
+}
