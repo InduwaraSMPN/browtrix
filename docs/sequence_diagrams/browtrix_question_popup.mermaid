@@ -1,0 +1,36 @@
+sequenceDiagram
+    autonumber
+    participant Client as MCP Client
+    participant Server as Browtrix Server
+    participant WebApp as Next.js App
+    actor WebUser as Browser User
+
+    Client->>Server: call_tool("browtrix_question_popup", question="Email?")
+    activate Server
+
+    alt UI Already Busy (Modal Open)
+        Server-->>Client: Error: "UI is busy with a previous request."
+    else UI Available
+        Server->>WebApp: WS: { type: "SHOW_INPUT", id: "req_456", validation: "email" }
+        activate WebApp
+        WebApp->>WebUser: Render Input Form
+        deactivate WebApp
+        
+        Note over WebApp, WebUser: WebApp is IDLE (Event Listener Active)
+
+        loop User Typing / Validation
+            WebUser->>WebApp: Types "invalid-email"
+            WebApp->>WebApp: Validate Regex (Fail)
+            WebApp-->>WebUser: Show Error "Invalid Email"
+            
+            WebUser->>WebApp: Types "bob@corp.com" & Clicks Submit
+            WebApp->>WebApp: Validate Regex (Pass)
+        end
+
+        activate WebApp
+        WebApp-->>Server: WS: { id: "req_456", type: "INPUT_RESULT", value: "bob@corp.com" }
+        deactivate WebApp
+
+        Server-->>Client: JSON: { "status": "success", "value": "bob@corp.com" }
+    end
+    deactivate Server

@@ -1,0 +1,37 @@
+sequenceDiagram
+    autonumber
+    participant Client as MCP Client (Claude/Cursor)
+    participant Server as Browtrix Server (FastMCP)
+    participant WebApp as Next.js App
+    
+    Note over Server, WebApp: Background: Periodic Heartbeat (Ping/Pong)
+
+    Client->>Server: call_tool("browtrix_html_snapshot")
+    activate Server
+
+    alt WebSocket Disconnected
+        Server-->>Client: Error: "Browser not connected. Please open the app."
+    else WebSocket Connected
+        Server->>WebApp: WS: { type: "GET_SNAPSHOT", format: "markdown" }
+        activate WebApp
+        
+        Note right of WebApp: Processing
+        WebApp->>WebApp: TurndownService.turndown(document.body)
+        Note right of WebApp: Converts DOM to Markdown to save tokens
+        
+        alt Processing Success
+            WebApp-->>Server: WS: { type: "SNAPSHOT_RESULT", content: "## Header..." }
+        else Processing Error
+            WebApp-->>Server: WS: { type: "ERROR", msg: "DOM Access Denied" }
+        end
+        deactivate WebApp
+        
+        Note right of Server: Server handles result or error
+        
+        alt Success
+            Server-->>Client: Result: "## Header..."
+        else Error
+            Server-->>Client: Error: "Failed to capture page content."
+        end
+    end
+    deactivate Server

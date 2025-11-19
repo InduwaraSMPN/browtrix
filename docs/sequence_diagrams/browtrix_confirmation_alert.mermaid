@@ -1,0 +1,40 @@
+sequenceDiagram
+    autonumber
+    participant Client as MCP Client
+    participant Server as Browtrix Server
+    participant WebApp as Next.js App
+    actor WebUser as Browser User
+
+    Client->>Server: call_tool("browtrix_confirmation_alert", msg="Deploy?")
+    activate Server
+
+    rect rgb(240, 240, 240)
+        Note right of Server: Phase 1: Dispatch
+        Server->>Server: Check Connection & Start Timer (30s)
+        Server->>WebApp: WS: { type: "SHOW_CONFIRM", id: "req_123", msg: "Deploy?" }
+        activate WebApp
+        WebApp->>WebUser: Render Modal (Non-Blocking)
+        deactivate WebApp
+    end
+
+    rect rgb(255, 250, 240)
+        Note right of Server: Phase 2: The Race (User vs Timeout)
+        par User Interaction
+            WebUser->>WebApp: Clicks "Cancel"
+            activate WebApp
+            WebApp-->>Server: WS: { id: "req_123", type: "CONFIRM_RESULT", approved: false }
+            deactivate WebApp
+        and Server Timeout Logic
+            loop Every 1s
+                Server->>Server: Check if result received or time > 30s
+            end
+        end
+    end
+
+    alt Result Received (User Clicked Cancel)
+        Server-->>Client: JSON: { "status": "denied", "reason": "User clicked cancel" }
+    else Timeout (30s elapsed)
+        Server->>WebApp: WS: { type: "ABORT_UI", id: "req_123" }
+        Server-->>Client: Error: "User did not respond in time. Operation aborted."
+    end
+    deactivate Server
