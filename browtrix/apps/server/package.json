@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "uv run main.py",
+    "dev": "uv run browtrix-server",
     "build": "echo 'Build not required for Python backend'"
   }
 }
