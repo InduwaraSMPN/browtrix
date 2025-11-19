@@ -55,8 +55,9 @@ async def websocket_endpoint(websocket: WebSocket):
 
 # Mount MCP App
 try:
-    # streamable_http_app is a method that returns the ASGI app
-    mcp_app = mcp.streamable_http_app()
+    # Use SSE transport for standard MCP compatibility
+    # Using 'sse' transport creates endpoints for /sse and /messages
+    mcp_app = mcp.http_app(transport="sse")
     app.mount("/", mcp_app)
 except Exception as e:
     print(f"Failed to mount MCP app: {e}")

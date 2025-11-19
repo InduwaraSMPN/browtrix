@@ -64,7 +64,7 @@ Implement configuration using `pydantic-settings`:
 Refactor to use `FastAPI` as the main wrapper to support WebSockets alongside FastMCP.
 - Initialize `FastAPI` app.
 - Initialize `FastMCP` server.
-- Mount `FastMCP` app to FastAPI.
+- Mount `FastMCP` app to FastAPI using `mcp.http_app(transport="sse")` for compatibility.
 - Add `@app.websocket("/ws")` endpoint that uses `ConnectionManager`.
 - Implement MCP Tools:
     - `browtrix_html_snapshot()`: Calls `manager.send_request("GET_SNAPSHOT")`.
@@ -119,6 +119,10 @@ This component will live in the root layout or page.
 3. Open Browser: `http://localhost:3001`.
 
 #### 4.2 Testing
+- **WebSocket**: Use `wscat` to verify the connection:
+    ```bash
+    wscat -c ws://localhost:8000/ws
+    ```
 - **Snapshot**: Use MCP Client to call `browtrix_html_snapshot`. Verify Markdown is returned.
 - **Alert**: Call `browtrix_confirmation_alert`. Verify Modal appears. Click Confirm. Verify "True" returned.
 - **Input**: Call `browtrix_question_popup`. Verify Input appears. Type text. Verify text returned.
@@ -132,7 +136,7 @@ This component will live in the root layout or page.
 - Import `FastAPI`, `WebSocket`.
 - Create `app = FastAPI()`.
 - Define `@mcp.tool` functions that await `manager.request(...)`.
-- Mount `mcp.http_app()` to FastAPI.
+- Mount `mcp.http_app(transport="sse")` to FastAPI.
 
 ### `apps/web/src/components/browtrix-overlay.tsx`
 - Uses `shadcn/ui` components (`Dialog`, `AlertDialog`, `Button`, `Input`).
