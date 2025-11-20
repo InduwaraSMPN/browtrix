@@ -9,7 +9,6 @@ from ..types.requests import SnapshotRequest
 from ..connection.errors import BrowserConnectionError, ValidationError
 
 
-
 class SnapshotOptions(BaseModel):
     """snapshot options with validation."""
 

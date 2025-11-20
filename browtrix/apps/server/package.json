@@ -4,6 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "uv run python -m browtrix_server.__main__",
-    "build": "echo 'Build not required for Python backend'"
+    "build": "echo 'Build not required for Python backend'",
+    "check-types": "uvx ty check",
+    "lint": "uvx ruff check",
+    "lint-fix": "uvx ruff check --fix",
+    "format": "uvx ruff format"
   }
 }
