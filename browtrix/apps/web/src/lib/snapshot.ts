@@ -1,15 +1,11 @@
-import TurndownService from "turndown";
-
 export function captureSnapshot(): string {
-  const turndownService = new TurndownService({
-    headingStyle: "atx",
-    codeBlockStyle: "fenced",
-  });
-
-  // Remove scripts, styles, and hidden elements to clean up the output
-  turndownService.remove("script");
-  turndownService.remove("style");
-  turndownService.remove("noscript");
+  // Create a clone of the document to avoid modifying the original
+  const clone = document.cloneNode(true) as Document;
   
-  return turndownService.turndown(document.body);
+  // Remove scripts, styles, and hidden elements to clean up the output
+  const elementsToRemove = clone.querySelectorAll('script, style, noscript, [style*="display: none"], [hidden]');
+  elementsToRemove.forEach(el => el.remove());
+  
+  // Return the HTML content
+  return clone.documentElement.outerHTML;
 }

@@ -28,6 +28,8 @@ export function BrowtrixProvider({ children }: { children: React.ReactNode }) {
       try {
         const data = JSON.parse(event.data);
         console.log("Received:", data);
+        console.log("Message type:", data.type);
+        console.log("Message ID:", data.id);
         setLastMessage(data);
       } catch (e) {
         console.error("Failed to parse WS message:", event.data);

@@ -22,20 +22,51 @@ export function BrowtrixOverlay() {
 
   useEffect(() => {
     if (!lastMessage) return;
-    const { type, id, msg, validation } = lastMessage;
+    const { type, id, params, message, title, timeout, validation } = lastMessage;
+
+    console.log("Received message:", { type, id, params, message, title, timeout, validation });
 
     if (type === "GET_SNAPSHOT") {
       // Handle snapshot immediately without UI
       try {
         const content = captureSnapshot();
-        sendMessage({ type: "SNAPSHOT_RESULT", id, content });
+        sendMessage({ 
+          id: id,
+          success: true, 
+          html_content: content,
+          url: window.location.href,
+          title: document.title,
+          timestamp: Date.now(),
+          execution_time_ms: 50,
+          metadata: {
+            content_size: content.length,
+            full_page: params?.full_page || true
+          }
+        });
       } catch (e) {
-        sendMessage({ type: "ERROR", id, msg: "Failed to capture snapshot" });
+        sendMessage({ 
+          id: id,
+          success: false, 
+          error: "Failed to capture snapshot",
+          timestamp: Date.now()
+        });
       }
     } else if (type === "SHOW_CONFIRM") {
+      // Handle both params format and direct fields
+      const msg = params?.message || message || "Confirm this action";
+      console.log("Showing confirmation:", msg);
       setActiveRequest({ id, type, msg });
     } else if (type === "SHOW_INPUT") {
-      setActiveRequest({ id, type, msg, validation });
+      // Handle both params format and direct fields
+      const msg = params?.message || message || "Please enter your input";
+      const valid = params?.validation || validation || "any";
+      console.log("Showing input:", msg, "validation:", valid);
+      setActiveRequest({ 
+        id, 
+        type, 
+        msg, 
+        validation: valid 
+      });
       setInputValue("");
       setError("");
     } else if (type === "ABORT_UI") {
@@ -45,10 +76,14 @@ export function BrowtrixOverlay() {
 
   const handleConfirm = (approved: boolean) => {
     if (!activeRequest) return;
+    console.log("Sending confirmation response:", { approved, id: activeRequest.id });
     sendMessage({
-      type: "CONFIRM_RESULT",
       id: activeRequest.id,
+      success: true,
       approved,
+      button_clicked: approved ? "ok" : "cancel",
+      timeout_occurred: false,
+      timestamp: Date.now()
     });
     setActiveRequest(null);
   };
@@ -66,10 +101,15 @@ export function BrowtrixOverlay() {
        }
     }
 
+    console.log("Sending input response:", { value: inputValue, id: activeRequest.id });
     sendMessage({
-      type: "INPUT_RESULT",
       id: activeRequest.id,
+      success: true,
       value: inputValue,
+      user_input: inputValue, // Keep for compatibility
+      input_type: "text",
+      validation_passed: true,
+      timestamp: Date.now()
     });
     setActiveRequest(null);
   };
