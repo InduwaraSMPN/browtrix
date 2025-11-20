@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/index";
 
 export const RipplePulseLoader = ({ className }: { className?: string }) => {
 	return (

@@ -1,9 +1,9 @@
 "use client";
 
-import { BrowtrixOverlay } from "@/components/browtrix-overlay";
-import { BrowtrixProvider } from "@/lib/browtrix-context";
-import { ThemeProvider } from "./theme-provider";
-import { Toaster } from "./ui/sonner";
+import { BrowtrixOverlay } from "@/components/overlay/browtrix-overlay";
+import { ThemeProvider } from "@/components/theme/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import { BrowtrixProvider } from "@/lib/contexts/browtrix-context";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
 	return (

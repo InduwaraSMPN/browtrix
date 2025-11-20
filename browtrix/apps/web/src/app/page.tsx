@@ -1,9 +1,9 @@
 "use client";
 
-import { ModeToggle } from "@/components/mode-toggle";
-import { DottedGlowBackground } from "@/components/ui/dotted-glow-background";
-import { TextHoverEffect } from "@/components/ui/text-hover-effect";
-import { useBrowtrix } from "@/lib/browtrix-context";
+import { DottedGlowBackground } from "@/components/overlay/dotted-glow-background";
+import { TextHoverEffect } from "@/components/text-effects/text-hover-effect";
+import { ModeToggle } from "@/components/theme/mode-toggle";
+import { useBrowtrix } from "@/lib/contexts/browtrix-context";
 
 export default function Home() {
 	const { isConnected } = useBrowtrix();

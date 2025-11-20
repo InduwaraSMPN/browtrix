@@ -10,8 +10,8 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useBrowtrix } from "@/lib/browtrix-context";
-import { captureSnapshot } from "@/lib/snapshot";
+import { useBrowtrix } from "@/lib/contexts/browtrix-context";
+import { captureSnapshot } from "@/lib/utils/snapshot";
 
 interface RequestState {
 	id: string;
@@ -170,21 +170,25 @@ export function BrowtrixOverlay() {
 								autoFocus
 								className="bg-gray-50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus-visible:border-sky-600 focus-visible:ring-sky-600/30"
 							/>
-							{error && <p className="text-red-500 dark:text-red-400 text-xs mt-1">{error}</p>}
+							{error && (
+								<p className="text-red-500 dark:text-red-400 text-xs mt-1">
+									{error}
+								</p>
+							)}
 						</form>
 					)}
 				</CardContent>
 				<CardFooter className="flex justify-end gap-2">
 					{activeRequest.type === "SHOW_CONFIRM" ? (
 						<>
-							<Button 
-								variant="outline" 
+							<Button
+								variant="outline"
 								onClick={() => handleConfirm(false)}
 								className="bg-gray-50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100 hover:border-gray-400 dark:hover:border-gray-600"
 							>
 								No
 							</Button>
-							<Button 
+							<Button
 								onClick={() => handleConfirm(true)}
 								className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-white shadow-lg shadow-gray-900/20 dark:shadow-gray-900/30"
 							>
@@ -193,15 +197,15 @@ export function BrowtrixOverlay() {
 						</>
 					) : (
 						<>
-							<Button 
-								variant="outline" 
+							<Button
+								variant="outline"
 								onClick={() => setActiveRequest(null)}
 								className="bg-gray-50 dark:bg-gray-800/50 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100 hover:border-gray-400 dark:hover:border-gray-600"
 							>
 								Cancel
 							</Button>
-							<Button 
-								type="submit" 
+							<Button
+								type="submit"
 								form="browtrix-form"
 								className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-white shadow-lg shadow-gray-900/20 dark:shadow-gray-900/30"
 							>
