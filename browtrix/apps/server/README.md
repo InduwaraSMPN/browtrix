@@ -1,4 +1,4 @@
-# Browtrix Server
+# Browtrix MCP Server
 
 FastMCP-based Python backend server for the Browtrix application.
 

@@ -1,5 +1,5 @@
 """
-Resource management system for Browtrix server.
+Resource management system for Browtrix MCP Server.
 """
 
 import asyncio

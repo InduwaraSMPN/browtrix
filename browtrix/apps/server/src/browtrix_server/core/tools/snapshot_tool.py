@@ -108,30 +108,3 @@ class SnapshotTool(BaseBrowtrixTool):
             raise
         except Exception as e:
             return ToolResult(success=False, error=f"Snapshot failed: {str(e)}")
-
-
-class SimpleSnapshotTool(BaseBrowtrixTool):
-    """Simple snapshot tool for backward compatibility."""
-
-    def __init__(self):
-        super().__init__(
-            name="html-snapshot_simple",
-            description="Simple HTML snapshot tool (backward compatibility)",
-        )
-
-    async def execute(self, **kwargs) -> ToolResult:
-        """Execute simple snapshot."""
-        try:
-            # Use default options
-            options = SnapshotOptions()
-            options.validate_options()
-
-            # Delegate to  tool
-            _tool = SnapshotTool()
-            _tool._connection_manager = getattr(self, "_connection_manager", None)
-
-            result = await _tool.execute(options=options)
-            return result
-
-        except Exception as e:
-            return ToolResult(success=False, error=f"Simple snapshot failed: {str(e)}")

@@ -1,5 +1,5 @@
 """
-Core module for Browtrix server with  architecture.
+Core module for Browtrix MCP Server with  architecture.
 """
 
 from .tools.base import BaseBrowtrixTool, ToolResult, ToolValidator
@@ -9,8 +9,6 @@ from .connection.errors import (
     BrowserTimeoutError,
     ToolExecutionError,
     ValidationError,
-    ConfigurationError,
-    HealthCheckError,
 )
 from .connection.manager import ConnectionManager, ConnectionHealthMonitor
 from .types.requests import (
@@ -35,8 +33,6 @@ __all__ = [
     "BrowserTimeoutError",
     "ToolExecutionError",
     "ValidationError",
-    "ConfigurationError",
-    "HealthCheckError",
     # Request/Response Types
     "BrowserRequest",
     "SnapshotRequest",

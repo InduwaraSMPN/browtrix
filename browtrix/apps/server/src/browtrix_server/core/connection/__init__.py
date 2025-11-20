@@ -1,5 +1,5 @@
 """
-Connection management module for Browtrix server.
+Connection management module for Browtrix MCP Server.
 """
 
 from .manager import ConnectionManager, ConnectionHealthMonitor
@@ -9,8 +9,6 @@ from .errors import (
     BrowserTimeoutError,
     ToolExecutionError,
     ValidationError,
-    ConfigurationError,
-    HealthCheckError,
 )
 
 __all__ = [
@@ -21,6 +19,4 @@ __all__ = [
     "BrowserTimeoutError",
     "ToolExecutionError",
     "ValidationError",
-    "ConfigurationError",
-    "HealthCheckError",
 ]

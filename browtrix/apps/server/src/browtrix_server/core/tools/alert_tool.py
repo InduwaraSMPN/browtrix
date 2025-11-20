@@ -91,29 +91,3 @@ class AlertTool(BaseBrowtrixTool):
             raise
         except Exception as e:
             return ToolResult(success=False, error=f"Alert failed: {str(e)}")
-
-
-class SimpleAlertTool(BaseBrowtrixTool):
-    """Simple alert tool for backward compatibility."""
-
-    def __init__(self):
-        super().__init__(
-            name="confirmation-alert_simple",
-            description="Simple confirmation alert tool (backward compatibility)",
-        )
-
-    async def execute(self, **kwargs) -> ToolResult:
-        """Execute simple alert."""
-        try:
-            message = kwargs.get("message", "")
-            options = AlertOptions(message=message)
-            options.validate_options()
-
-            _tool = AlertTool()
-            _tool._connection_manager = getattr(self, "_connection_manager", None)
-
-            result = await _tool.execute(options=options)
-            return result
-
-        except Exception as e:
-            return ToolResult(success=False, error=f"Simple alert failed: {str(e)}")

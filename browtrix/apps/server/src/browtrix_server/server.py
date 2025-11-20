@@ -99,7 +99,7 @@ class BrowtrixServer:
         self._shutdown_event = None
 
         logger.info(
-            "Browtrix Server initialized",
+            "Browtrix MCP Server initialized",
             host=self.config.host,
             port=self.config.port,
             max_connections=self.config.max_connections,
@@ -298,13 +298,13 @@ class BrowtrixServer:
     @asynccontextmanager
     async def lifespan(self, app: FastAPI):
         """Application lifespan."""
-        logger.info("Starting Browtrix Server...")
+        logger.info("Starting Browtrix MCP Server...")
         await self.connection_manager.start_health_monitoring()
         self._shutdown_event = asyncio.Event()
 
         yield
 
-        logger.info("Shutting down Browtrix Server...")
+        logger.info("Shutting down Browtrix MCP Server...")
         await self.connection_manager.stop_health_monitoring()
         if self._shutdown_event:
             self._shutdown_event.set()

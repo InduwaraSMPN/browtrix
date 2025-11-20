@@ -80,19 +80,3 @@ class ValidationError(BrowtrixError):
         self.field_name = field_name
         self.field_value = field_value
         self.validation_rule = validation_rule
-
-
-class ConfigurationError(BrowtrixError):
-    """Raised when configuration is invalid or missing."""
-
-    def __init__(self, config_key: str, message: str = "Configuration error", **kwargs):
-        super().__init__(message, kwargs)
-        self.config_key = config_key
-
-
-class HealthCheckError(BrowtrixError):
-    """Raised when health check fails."""
-
-    def __init__(self, component: str, message: str = "Health check failed", **kwargs):
-        super().__init__(message, kwargs)
-        self.component = component

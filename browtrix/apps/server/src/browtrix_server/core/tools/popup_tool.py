@@ -114,29 +114,3 @@ class PopupTool(BaseBrowtrixTool):
             raise
         except Exception as e:
             return ToolResult(success=False, error=f"Popup failed: {str(e)}")
-
-
-class SimplePopupTool(BaseBrowtrixTool):
-    """Simple popup tool for backward compatibility."""
-
-    def __init__(self):
-        super().__init__(
-            name="question-popup_simple",
-            description="Simple question popup tool (backward compatibility)",
-        )
-
-    async def execute(self, **kwargs) -> ToolResult:
-        """Execute simple popup."""
-        try:
-            question = kwargs.get("question", "")
-            options = PopupOptions(question=question)
-            options.validate_options()
-
-            _tool = PopupTool()
-            _tool._connection_manager = getattr(self, "_connection_manager", None)
-
-            result = await _tool.execute(options=options)
-            return result
-
-        except Exception as e:
-            return ToolResult(success=False, error=f"Simple popup failed: {str(e)}")

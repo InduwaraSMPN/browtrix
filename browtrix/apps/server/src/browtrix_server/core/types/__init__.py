@@ -1,5 +1,5 @@
 """
-Request and response type definitions for Browtrix server.
+Request and response type definitions for Browtrix MCP Server.
 """
 
 from .requests import (

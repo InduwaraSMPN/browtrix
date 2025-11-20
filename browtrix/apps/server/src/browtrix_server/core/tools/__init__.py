@@ -1,23 +1,20 @@
 """
-Tools module for Browtrix server.
+Tools module for Browtrix MCP Server.
 """
 
 from .base import BaseBrowtrixTool, ToolResult, ToolValidator
-from .snapshot_tool import SnapshotTool, SimpleSnapshotTool, SnapshotOptions
-from .alert_tool import AlertTool, SimpleAlertTool, AlertOptions
-from .popup_tool import PopupTool, SimplePopupTool, PopupOptions
+from .snapshot_tool import SnapshotTool, SnapshotOptions
+from .alert_tool import AlertTool, AlertOptions
+from .popup_tool import PopupTool, PopupOptions
 
 __all__ = [
     "BaseBrowtrixTool",
     "ToolResult",
     "ToolValidator",
     "SnapshotTool",
-    "SimpleSnapshotTool",
     "SnapshotOptions",
     "AlertTool",
-    "SimpleAlertTool",
     "AlertOptions",
     "PopupTool",
-    "SimplePopupTool",
     "PopupOptions",
 ]
