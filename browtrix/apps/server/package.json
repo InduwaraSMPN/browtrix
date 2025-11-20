@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "uv run python -m browtrix_server.__main__",
+    "test": "uv run pytest src/browtrix_server/tests",
     "check-types": "uvx ty check",
     "lint": "uvx ruff check",
     "lint-fix": "uvx ruff check --fix",
