@@ -6,7 +6,9 @@ export function captureSnapshot(): string {
 	const elementsToRemove = clone.querySelectorAll(
 		'script, style, noscript, [style*="display: none"], [hidden]',
 	);
-	elementsToRemove.forEach((el) => el.remove());
+	elementsToRemove.forEach((el) => {
+		el.remove();
+	});
 
 	// Return the HTML content
 	return clone.documentElement.outerHTML;

@@ -21,7 +21,7 @@ interface RequestState {
 }
 
 export function BrowtrixOverlay() {
-	const { lastMessage, sendMessage, isConnected } = useBrowtrix();
+	const { lastMessage, sendMessage } = useBrowtrix();
 	const [activeRequest, setActiveRequest] = useState<RequestState | null>(null);
 	const [inputValue, setInputValue] = useState("");
 	const [error, setError] = useState("");
@@ -30,6 +30,9 @@ export function BrowtrixOverlay() {
 		if (!lastMessage) return;
 		const { type, id, params, message, title, timeout, validation } =
 			lastMessage;
+
+		// Ensure required properties are present
+		if (!type || !id) return;
 
 		console.log("Received message:", {
 			type,
@@ -68,13 +71,16 @@ export function BrowtrixOverlay() {
 			}
 		} else if (type === "SHOW_CONFIRM") {
 			// Handle both params format and direct fields
-			const msg = params?.message || message || "Confirm this action";
+			const msg: string =
+				(params?.message as string) || message || "Confirm this action";
 			console.log("Showing confirmation:", msg);
 			setActiveRequest({ id, type, msg });
 		} else if (type === "SHOW_INPUT") {
 			// Handle both params format and direct fields
-			const msg = params?.message || message || "Please enter your input";
-			const valid = params?.validation || validation || "any";
+			const msg: string =
+				(params?.message as string) || message || "Please enter your input";
+			const valid: string =
+				(params?.validation as string) || validation || "any";
 			console.log("Showing input:", msg, "validation:", valid);
 			setActiveRequest({
 				id,

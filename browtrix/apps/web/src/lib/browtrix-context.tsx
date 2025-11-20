@@ -10,17 +10,46 @@ import {
 	useState,
 } from "react";
 
+interface BrowtrixMessage {
+	type: string;
+	id: string;
+	params?: Record<string, unknown>;
+	message?: string;
+	title?: string;
+	timeout?: number;
+	validation?: string;
+}
+
+interface BrowtrixResponse {
+	id: string;
+	success: boolean;
+	approved?: boolean;
+	button_clicked?: string;
+	timeout_occurred?: boolean;
+	value?: string;
+	user_input?: string;
+	input_type?: string;
+	validation_passed?: boolean;
+	error?: string;
+	html_content?: string;
+	url?: string;
+	title?: string;
+	timestamp: number;
+	execution_time_ms?: number;
+	metadata?: Record<string, unknown>;
+}
+
 interface BrowtrixContextType {
 	isConnected: boolean;
-	lastMessage: any;
-	sendMessage: (msg: any) => void;
+	lastMessage: BrowtrixMessage | null;
+	sendMessage: (msg: BrowtrixResponse) => void;
 }
 
 const BrowtrixContext = createContext<BrowtrixContextType | null>(null);
 
 export function BrowtrixProvider({ children }: { children: React.ReactNode }) {
 	const [isConnected, setIsConnected] = useState(false);
-	const [lastMessage, setLastMessage] = useState<any>(null);
+	const [lastMessage, setLastMessage] = useState<BrowtrixMessage | null>(null);
 	const wsRef = useRef<WebSocket | null>(null);
 	const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -71,7 +100,7 @@ export function BrowtrixProvider({ children }: { children: React.ReactNode }) {
 		};
 	}, [connect]);
 
-	const sendMessage = useCallback((msg: any) => {
+	const sendMessage = useCallback((msg: BrowtrixResponse) => {
 		if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
 			wsRef.current.send(JSON.stringify(msg));
 		} else {

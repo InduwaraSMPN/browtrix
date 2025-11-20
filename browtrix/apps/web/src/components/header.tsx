@@ -1,9 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useBrowtrix } from "@/lib/browtrix-context";
 
 export default function Header() {
-	const { isConnected } = useBrowtrix();
 	const links = [] as const;
 
 	return (
