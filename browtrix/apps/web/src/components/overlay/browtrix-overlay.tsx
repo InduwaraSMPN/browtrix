@@ -144,7 +144,7 @@ export function BrowtrixOverlay() {
 	if (!activeRequest) return null;
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md">
+		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
 			<Card className="w-full max-w-md mx-4 bg-white/95 dark:bg-gray-900/95 border-gray-200 dark:border-gray-800/50 shadow-2xl shadow-gray-200/50 dark:shadow-sky-900/20">
 				<CardHeader>
 					<CardTitle className="text-gray-900 dark:text-gray-100">
