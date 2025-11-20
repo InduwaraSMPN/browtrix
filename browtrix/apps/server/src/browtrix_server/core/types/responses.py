@@ -4,7 +4,7 @@ Response type definitions for Browtrix communication.
 
 from typing import Dict, Any, Optional
 from pydantic import BaseModel, Field, ConfigDict
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class BrowserResponse(BaseModel):
@@ -18,7 +18,7 @@ class BrowserResponse(BaseModel):
     success: bool = False
     data: Optional[Dict[str, Any]] = None
     error: Optional[str] = None
-    timestamp: datetime = Field(default_factory=datetime.now)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     execution_time_ms: Optional[float] = None
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
@@ -87,7 +87,7 @@ class ConnectionInfo(BaseModel):
 
     connection_id: str
     status: str = "active"
-    created_at: datetime = Field(default_factory=datetime.now)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     last_activity: Optional[datetime] = None
     request_count: int = 0
     error_count: int = 0
@@ -95,4 +95,4 @@ class ConnectionInfo(BaseModel):
     is_active: bool = True
     browser_id: Optional[str] = None
     user_agent: Optional[str] = None
-    connected_at: datetime = Field(default_factory=datetime.now)
+    connected_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

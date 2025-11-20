@@ -25,7 +25,9 @@ logger = structlog.get_logger(__name__)
 class ConnectionHealthMonitor:
     """Monitor connection health and detect stale connections."""
 
-    def __init__(self, max_idle_time: float = 300.0):  # 5 minutes
+    def __init__(
+        self, max_idle_time: float = 1800.0
+    ):  # 30 minutes - longer timeout for development
         self.max_idle_time = max_idle_time
         self.last_activity: Dict[str, datetime] = {}
 
@@ -36,7 +38,7 @@ class ConnectionHealthMonitor:
     def is_healthy(self, connection_id: str) -> bool:
         """Check if connection is still healthy."""
         if connection_id not in self.last_activity:
-            return False
+            return True  # New connections are considered healthy
 
         last_activity = self.last_activity[connection_id]
         return datetime.now(timezone.utc) - last_activity < timedelta(
@@ -90,7 +92,7 @@ class ConnectionManager:
         self._health_check_task: Optional[asyncio.Task] = None
         self._cleanup_task: Optional[asyncio.Task] = None
 
-    async def connect(self, websocket: WebSocket, browser_id: Optional[str] = None):
+    async def connect(self, websocket: WebSocket, client_id: Optional[str] = None):
         """Establish connection with tracking."""
         connection_id = str(uuid.uuid4())
 
@@ -104,10 +106,13 @@ class ConnectionManager:
         self.active_connections[connection_id] = websocket
 
         # Create connection info
+        current_time = datetime.now(timezone.utc)
         connection_info = ConnectionInfo(
             connection_id=connection_id,
-            browser_id=browser_id,
+            browser_id=client_id,
             user_agent=websocket.headers.get("user-agent"),
+            is_active=True,  # Mark as active immediately
+            last_activity=current_time,  # Set initial activity
         )
         self.connection_info[connection_id] = connection_info
         self.health_monitor.update_activity(connection_id)
@@ -115,7 +120,7 @@ class ConnectionManager:
         logger.info(
             "New connection established",
             connection_id=connection_id,
-            browser_id=browser_id,
+            client_id=client_id,
             total_connections=len(self.active_connections),
         )
 
@@ -142,7 +147,7 @@ class ConnectionManager:
         """Send request with error handling and retry logic."""
         if not self.active_connections:
             raise BrowserConnectionError(
-                "No browser connected. Please open the web app."
+                "No web client connected. Please open the web app."
             )
 
         # Select connection
@@ -165,10 +170,21 @@ class ConnectionManager:
 
         try:
             # Send request
-            await websocket.send_json(request.model_dump())
+            request_data = request.model_dump()
+            logger.info(
+                "Sending WebSocket request",
+                request_id=request.id,
+                request_type=request.type,
+                connection_id=target_connection,
+                request_data=request_data,
+            )
+            await websocket.send_json(request_data)
             self.health_monitor.update_activity(target_connection)
 
             # Wait for response
+            logger.info(
+                "Waiting for response", request_id=request.id, timeout=request.timeout
+            )
             response = await asyncio.wait_for(future, timeout=request.timeout)
             self.successful_requests += 1
 
@@ -237,6 +253,14 @@ class ConnectionManager:
             message_data = json.loads(data)
             msg_type = message_data.get("type")
             req_id = message_data.get("id")
+
+            logger.info(
+                "Received WebSocket message",
+                connection_id=connection_id,
+                message_type=msg_type,
+                request_id=req_id,
+                message_data=message_data,
+            )
 
             self.health_monitor.update_activity(connection_id)
 
@@ -342,7 +366,7 @@ class ConnectionManager:
             "average_response_time": self.average_response_time,
             "pending_requests": list(self.pending_futures.keys()),
             "connection_info": [
-                info.model_dump() for info in self.connection_info.values()
+                info.model_dump(mode="json") for info in self.connection_info.values()
             ],
         }
 

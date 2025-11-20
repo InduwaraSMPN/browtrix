@@ -1,15 +1,9 @@
-import uvicorn
-from .server import app
-from .settings import settings
+import asyncio
+from .server import main as server_main
 
 
 def main():
-    uvicorn.run(
-        app,
-        host=settings.host,
-        port=settings.port,
-        log_level=settings.log_level.lower(),
-    )
+    asyncio.run(server_main())
 
 
 if __name__ == "__main__":

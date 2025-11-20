@@ -2,6 +2,7 @@
 Browtrix MCP Server with  features.
 """
 
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import JSONResponse
 from fastmcp import FastMCP
@@ -82,6 +83,7 @@ class BrowtrixServer:
             title="Browtrix MCP Server",
             description="Model Context Protocol server for browser automation",
             version="1.0.0",
+            lifespan=self.lifespan,
         )
 
         # Setup tools
@@ -226,7 +228,7 @@ class BrowtrixServer:
                 health_status = self.connection_manager.get_health_status()
                 return JSONResponse(
                     status_code=200 if health_status.status == "healthy" else 503,
-                    content=health_status.model_dump(),
+                    content=health_status.model_dump(mode="json"),
                 )
             except Exception as e:
                 logger.error("Health check failed", error=str(e))
@@ -293,32 +295,27 @@ class BrowtrixServer:
                 if connection_id:
                     self.connection_manager.disconnect(connection_id)
 
-    def _setup_lifespan(self):
-        """Setup application lifespan."""
+    @asynccontextmanager
+    async def lifespan(self, app: FastAPI):
+        """Application lifespan."""
+        logger.info("Starting Browtrix Server...")
+        await self.connection_manager.start_health_monitoring()
+        self._shutdown_event = asyncio.Event()
 
-        @self.app.on_event("startup")
-        async def startup_event():
-            """Startup event handler."""
-            logger.info("Starting Browtrix Server...")
-            await self.connection_manager.start_health_monitoring()
-            self._shutdown_event = asyncio.Event()
+        yield
 
-        @self.app.on_event("shutdown")
-        async def shutdown_event():
-            """Shutdown event handler."""
-            logger.info("Shutting down Browtrix Server...")
-            await self.connection_manager.stop_health_monitoring()
-            if self._shutdown_event:
-                self._shutdown_event.set()
+        logger.info("Shutting down Browtrix Server...")
+        await self.connection_manager.stop_health_monitoring()
+        if self._shutdown_event:
+            self._shutdown_event.set()
 
     async def run(self):
         """Run the server."""
-        self._setup_lifespan()
 
         # Mount MCP app
         try:
             mcp_app = self.mcp.http_app(transport="sse")
-            self.app.mount("/", mcp_app)
+            self.app.mount("/mcp", mcp_app)
         except Exception as e:
             logger.error("Failed to mount MCP app", error=str(e))
             raise
