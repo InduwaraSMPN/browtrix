@@ -23,9 +23,14 @@ browtrix-server = "browtrix_server.__main__:main"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.pytest.ini_options]
+asyncio_mode = "strict"
+asyncio_default_fixture_loop_scope = "function"
+
 [dependency-groups]
 dev = [
     "ty>=0.0.1a27",
     "ruff>=0.6.0",
     "pytest-cov>=7.0.0",
+    "freezegun>=1.5.5",
 ]

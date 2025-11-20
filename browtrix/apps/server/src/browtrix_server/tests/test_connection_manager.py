@@ -173,3 +173,157 @@ async def test_request_timeout_edge_cases(connection_manager):
         await connection_manager.send_request(
             MagicMock(id="test", timeout=0, type="test")
         )
+
+
+def test_connection_manager_edge_cases():
+    """Test ConnectionManager with edge case parameters."""
+    # Test with zero max_connections
+    manager = ConnectionManager(max_connections=0, request_timeout=5.0)
+    assert manager.max_connections == 0
+
+    # Test with negative max_connections
+    manager = ConnectionManager(max_connections=-1, request_timeout=5.0)
+    assert manager.max_connections == -1
+
+    # Test with extremely large timeout
+    manager = ConnectionManager(max_connections=2, request_timeout=999999)
+    assert manager.request_timeout == 999999
+
+    # Test with negative timeout
+    manager = ConnectionManager(max_connections=2, request_timeout=-1)
+    assert manager.request_timeout == -1
+
+
+@pytest.mark.asyncio
+async def test_connection_id_collision_handling():
+    """Test handling of potential connection ID collisions."""
+    manager = ConnectionManager(max_connections=10, request_timeout=5.0)
+
+    # Create multiple connections and verify IDs are unique
+    connection_ids = set()
+    for _ in range(5):
+        mock_ws = AsyncMock()
+        mock_ws.headers = {"user-agent": "test"}
+        mock_ws.accept = AsyncMock()
+
+        cid = await manager.connect(mock_ws)
+        assert cid not in connection_ids  # Should be unique
+        connection_ids.add(cid)
+
+    assert len(connection_ids) == 5
+
+    # Cleanup
+    for cid in connection_ids:
+        manager.disconnect(cid)
+
+
+@pytest.mark.asyncio
+async def test_background_task_management():
+    """Test background task startup, operation, and shutdown."""
+    manager = ConnectionManager(max_connections=2, request_timeout=5.0)
+
+    # Initially no tasks should be running
+    assert manager._health_check_task is None
+    assert manager._cleanup_task is None
+
+    # Start monitoring
+    await manager.start_health_monitoring()
+
+    # Tasks should be created
+    assert manager._health_check_task is not None
+    assert manager._cleanup_task is not None
+    assert not manager._health_check_task.done()
+    assert not manager._cleanup_task.done()
+
+    # Stop monitoring
+    await manager.stop_health_monitoring()
+
+    # Tasks should be set to None after cancellation
+    assert manager._health_check_task is None
+    assert manager._cleanup_task is None
+
+
+@pytest.mark.asyncio
+async def test_background_task_error_recovery():
+    """Test that background tasks handle errors gracefully."""
+    manager = ConnectionManager(max_connections=2, request_timeout=5.0)
+
+    # Mock the health check loop to raise an exception
+    original_loop = manager._health_check_loop
+
+    async def failing_loop():
+        raise Exception("Health check failed")
+
+    manager._health_check_loop = failing_loop
+
+    try:
+        await manager.start_health_monitoring()
+
+        # Wait a bit for the task to fail
+        await asyncio.sleep(0.1)
+
+        # Task should have failed but not crashed the manager
+        assert manager._health_check_task is not None
+        # The task may or may not be done depending on timing
+
+        # Cleanup task should still be running
+        assert manager._cleanup_task is not None
+
+    finally:
+        # Restore original method
+        manager._health_check_loop = original_loop
+        await manager.stop_health_monitoring()
+
+
+@pytest.mark.asyncio
+async def test_background_task_cancellation():
+    """Test graceful cancellation of background tasks."""
+    manager = ConnectionManager(max_connections=2, request_timeout=5.0)
+
+    await manager.start_health_monitoring()
+
+    # Cancel tasks
+    await manager.stop_health_monitoring()
+
+    # Tasks should be properly cancelled
+    assert manager._health_check_task is None
+    assert manager._cleanup_task is None
+
+    # Should be safe to call stop again
+    await manager.stop_health_monitoring()  # Should not raise
+
+
+@pytest.mark.asyncio
+async def test_websocket_backpressure_simulation():
+    """Test behavior under WebSocket backpressure conditions."""
+    manager = ConnectionManager(max_connections=2, request_timeout=5.0)
+
+    # Create connection with slow WebSocket
+    mock_ws = AsyncMock()
+    mock_ws.headers = {"user-agent": "test"}
+    mock_ws.accept = AsyncMock()
+
+    # Simulate slow send_json
+    async def slow_send_json(message):
+        await asyncio.sleep(0.1)  # Simulate network delay
+        return None
+
+    mock_ws.send_json = slow_send_json
+
+    cid = await manager.connect(mock_ws)
+
+    # Send multiple requests rapidly
+    tasks = []
+    for i in range(3):
+        request = MagicMock(id=f"req_{i}", timeout=1.0, type="test")
+        task = asyncio.create_task(manager.send_request(request))
+        tasks.append(task)
+
+    # Some should timeout due to backpressure
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+
+    # At least one should have timed out
+    timeout_count = sum(1 for r in results if isinstance(r, Exception))
+    assert timeout_count > 0
+
+    manager.disconnect(cid)
