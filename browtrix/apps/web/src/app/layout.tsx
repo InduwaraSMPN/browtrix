@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "frontend",
-	description: "frontend",
+	title: "browtrix",
+	description: "browtrix MCP",
 };
 
 export default function RootLayout({

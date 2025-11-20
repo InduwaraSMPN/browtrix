@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "frontend",
+      "name": "browtrix",
       "devDependencies": {
         "turbo": "^2.5.4",
       },
@@ -45,7 +45,7 @@
       },
     },
     "packages/config": {
-      "name": "@frontend/config",
+      "name": "@browtrix/config",
       "version": "0.0.0",
     },
   },
@@ -80,7 +80,7 @@
 
     "@floating-ui/utils": ["@floating-ui/utils@0.2.10", "", {}, "sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ=="],
 
-    "@frontend/config": ["@frontend/config@workspace:packages/config"],
+    "@browtrix/config": ["@browtrix/config@workspace:packages/config"],
 
     "@humanwhocodes/config-array": ["@humanwhocodes/config-array@0.13.0", "", { "dependencies": { "@humanwhocodes/object-schema": "^2.0.3", "debug": "^4.3.1", "minimatch": "^3.0.5" } }, "sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw=="],
 
