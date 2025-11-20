@@ -54,7 +54,8 @@ export function BrowtrixProvider({ children }: { children: React.ReactNode }) {
 	const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 	const connect = useCallback(() => {
-		const ws = new WebSocket("ws://localhost:8000/ws");
+		const WS_URL = (process.env.NEXT_PUBLIC_BROWTRIX_MCP_WS_URL) as string;
+		const ws = new WebSocket(WS_URL);
 
 		ws.onopen = () => {
 			console.log("Browtrix WS Connected");
