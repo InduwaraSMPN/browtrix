@@ -1,7 +1,7 @@
 import pytest
 import asyncio
 import json
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 from fastapi.testclient import TestClient
 from browtrix_server.server import app, get_global_server
 from browtrix_server.core.connection.manager import ConnectionManager
@@ -149,10 +149,6 @@ async def test_websocket_connection_lifecycle(websocket_client):
 @pytest.mark.asyncio
 async def test_full_request_response_cycle(websocket_client):
     """Test complete request/response cycle through WebSocket."""
-    # Create a mock response that will be returned by the browser
-    mock_response = BrowserResponse(
-        id="test_request_123", success=True, data={"result": "success"}
-    )
 
     # Mock the WebSocket to simulate browser response
     async def mock_send_json(message):

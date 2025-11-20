@@ -254,7 +254,7 @@ async def test_background_task_error_recovery():
     async def failing_loop():
         raise Exception("Health check failed")
 
-    manager._health_check_loop = failing_loop
+    manager._health_check_loop = failing_loop  # type: ignore
 
     try:
         await manager.start_health_monitoring()
@@ -271,7 +271,7 @@ async def test_background_task_error_recovery():
 
     finally:
         # Restore original method
-        manager._health_check_loop = original_loop
+        manager._health_check_loop = original_loop  # type: ignore
         await manager.stop_health_monitoring()
 
 

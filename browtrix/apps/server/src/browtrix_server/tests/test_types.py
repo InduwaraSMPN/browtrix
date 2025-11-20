@@ -1,6 +1,5 @@
 import pytest
 from pydantic import ValidationError
-from pydantic_core import ValidationError as PydanticCoreError
 from browtrix_server.core.types.requests import (
     BrowserRequest,
     SnapshotRequest,

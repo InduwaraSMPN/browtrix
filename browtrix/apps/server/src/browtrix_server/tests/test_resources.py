@@ -89,7 +89,6 @@ def test_resource_stats(resource_manager):
 @pytest.mark.asyncio
 async def test_cleanup_old_resources(resource_manager):
     """Test that cleanup removes old inactive resources."""
-    from datetime import timedelta
 
     # Create some resources
     resource1 = await resource_manager.create_resource(name="resource1")
@@ -193,7 +192,6 @@ async def test_resource_corruption_scenarios():
     resource = await manager.create_resource(name="test")
 
     # Simulate corruption by manually modifying internal state
-    original_data = resource.data.copy()
     # Simulate corruption by clearing the data dict
     resource.data.clear()
 
@@ -222,7 +220,7 @@ async def test_cleanup_failure_handling():
 
     # Replace the cleanup method temporarily
     original_cleanup = manager._cleanup_old_resources
-    manager._cleanup_old_resources = failing_cleanup
+    manager._cleanup_old_resources = failing_cleanup  # type: ignore
 
     try:
         # Manually call cleanup to test error handling
@@ -230,7 +228,7 @@ async def test_cleanup_failure_handling():
             await manager._cleanup_old_resources()
     finally:
         # Restore original cleanup
-        manager._cleanup_old_resources = original_cleanup
+        manager._cleanup_old_resources = original_cleanup  # type: ignore
 
     # Verify resources are still intact after failed cleanup
     assert len(manager.resources) == 2
