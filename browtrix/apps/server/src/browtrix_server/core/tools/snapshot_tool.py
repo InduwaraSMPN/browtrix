@@ -10,20 +10,43 @@ from ..connection.errors import BrowserConnectionError, ValidationError
 
 
 class SnapshotOptions(BaseModel):
-    """snapshot options with validation."""
+    """Snapshot options with validation for capturing browser page HTML content."""
 
     wait_for: Annotated[
         Optional[str],
-        Field(description="CSS selector to wait for before taking snapshot"),
+        Field(
+            description="CSS selector to wait for before capturing the snapshot. "
+            "The tool will wait for this element to appear in the DOM before proceeding. "
+            "Examples: '#content', '.data-loaded', '[data-ready=\"true\"]'. "
+            "If None, capture proceeds immediately."
+        ),
     ] = None
     full_page: Annotated[
-        bool, Field(description="Capture full page or visible area")
+        bool,
+        Field(
+            description="Whether to capture the full page including content below the fold (true) "
+            "or only the visible viewport area (false). Full page capture is recommended for "
+            "complete content analysis, while viewport capture is faster."
+        ),
     ] = True
     wait_timeout: Annotated[
-        int, Field(description="Timeout to wait for element", ge=1, le=60)
+        int,
+        Field(
+            description="Maximum time in seconds to wait for the wait_for element to appear. "
+            "Range: 1-60 seconds. If the element doesn't appear within this time, "
+            "the capture proceeds anyway. Increase for slow-loading pages.",
+            ge=1,
+            le=60,
+        ),
     ] = 10
     quality: Annotated[
-        int, Field(description="Snapshot quality (1-100)", ge=1, le=100)
+        int,
+        Field(
+            description="Reserved for future screenshot functionality. Quality level from 1 (lowest) "
+            "to 100 (highest). Currently has no effect on HTML snapshots.",
+            ge=1,
+            le=100,
+        ),
     ] = 100
 
     def validate_options(self):
@@ -41,17 +64,52 @@ class SnapshotTool(BaseBrowtrixTool):
     def __init__(self):
         super().__init__(
             name="html-snapshot",
-            description="""HTML snapshot with configurable options.
+            description="""Captures a complete HTML snapshot of the current browser page with advanced rendering options.
 
-Captures HTML content or screenshot of the current browser page.
+This tool provides high-fidelity capture of web page content, allowing you to wait for dynamic content to load before capturing. It returns the full HTML DOM structure along with metadata about the captured page.
+
+Use Cases:
+- Capturing dynamically-loaded content after AJAX/fetch requests complete
+- Extracting full page HTML for analysis or archival
+- Taking snapshots after specific elements render (e.g., loading spinners disappear)
+- Monitoring page state changes over time
+
+Capture Behavior:
+1. Optionally waits for a specified CSS selector to appear before capturing
+2. Captures either the full page (including content below the fold) or just the visible viewport
+3. Returns the complete HTML DOM as a string with associated metadata
+4. Includes timing and size information for performance monitoring
+
+Best Practices:
+- Use `wait_for` parameter when targeting pages with dynamic content (React, Vue, Angular apps)
+- Set `full_page=false` for faster captures when only viewport content is needed
+- Increase `wait_timeout` for slow-loading pages or complex SPAs
+- Monitor `content_size` to track page complexity and potential performance issues
 
 Parameters:
-- wait_for: CSS selector to wait for (optional)
-- full_page: Capture full page (default: true)
-- wait_timeout: Wait timeout in seconds (1-60, default: 10)
-- quality: Image quality (1-100, default: 100)
+- wait_for: CSS selector to wait for before capturing (e.g., '#content', '.data-loaded'). The tool will wait up to `wait_timeout` seconds for this element to appear in the DOM.
+- full_page: Capture the entire page including content below the fold (default: true). Set to false to capture only the visible viewport area.
+- wait_timeout: Maximum time in seconds to wait for the `wait_for` element (range: 1-60, default: 10). If the element doesn't appear within this time, the capture will proceed anyway.
+- quality: Reserved for future screenshot functionality (range: 1-100, default: 100).
 
-Returns: HTML content, page URL, title, content size, and snapshot metadata.""",
+Returns:
+A structured result containing:
+- html_content: Complete HTML DOM as a string
+- page_url: Current URL of the captured page
+- page_title: Page title from the <title> tag
+- content_size: Size of the HTML content in bytes
+- snapshot_options: Echo of the options used for this capture
+
+Example Usage:
+Wait for a data table to load before capturing:
+  wait_for: 'table.data-loaded'
+  full_page: true
+  wait_timeout: 15
+
+Capture just the visible area immediately:
+  wait_for: null
+  full_page: false
+  wait_timeout: 10""",
         )
         self._connection_manager: Optional[Any] = None
 

@@ -112,17 +112,70 @@ class BrowtrixServer:
         @self.mcp.tool
         async def html_snapshot(
             wait_for: Annotated[
-                Optional[str], Field(description="CSS selector to wait for")
+                Optional[str],
+                Field(
+                    description="CSS selector to wait for before capturing the snapshot. "
+                    "The tool will wait for this element to appear in the DOM before proceeding. "
+                    "Examples: '#content', '.data-loaded', '[data-ready=\"true\"]'. "
+                    "If None, capture proceeds immediately."
+                ),
             ] = None,
-            full_page: Annotated[bool, Field(description="Capture full page")] = True,
+            full_page: Annotated[
+                bool,
+                Field(
+                    description="Whether to capture the full page including content below the fold (true) "
+                    "or only the visible viewport area (false). Full page capture is recommended for "
+                    "complete content analysis, while viewport capture is faster."
+                ),
+            ] = True,
             wait_timeout: Annotated[
-                int, Field(description="Wait timeout", ge=1, le=60)
+                int,
+                Field(
+                    description="Maximum time in seconds to wait for the wait_for element to appear. "
+                    "Range: 1-60 seconds. If the element doesn't appear within this time, "
+                    "the capture proceeds anyway. Increase for slow-loading pages.",
+                    ge=1,
+                    le=60,
+                ),
             ] = 10,
             quality: Annotated[
-                int, Field(description="Quality (1-100)", ge=1, le=100)
+                int,
+                Field(
+                    description="Reserved for future screenshot functionality. Quality level from 1 (lowest) "
+                    "to 100 (highest). Currently has no effect on HTML snapshots.",
+                    ge=1,
+                    le=100,
+                ),
             ] = 100,
         ) -> Annotated[str, "HTML content of the page"]:
-            """HTML snapshot with configurable options."""
+            """Captures a complete HTML snapshot of the current browser page with advanced rendering options.
+
+            This tool provides high-fidelity capture of web page content, allowing you to wait for dynamic content to load before capturing. It returns the full HTML DOM structure along with metadata about the captured page.
+
+            Use Cases:
+            - Capturing dynamically-loaded content after AJAX/fetch requests complete
+            - Extracting full page HTML for analysis or archival
+            - Taking snapshots after specific elements render (e.g., loading spinners disappear)
+            - Monitoring page state changes over time
+
+            Capture Behavior:
+            1. Optionally waits for a specified CSS selector to appear before capturing
+            2. Captures either the full page (including content below the fold) or just the visible viewport
+            3. Returns the complete HTML DOM as a string with associated metadata
+            4. Includes timing and size information for performance monitoring
+
+            Best Practices:
+            - Use `wait_for` parameter when targeting pages with dynamic content (React, Vue, Angular apps)
+            - Set `full_page=false` for faster captures when only viewport content is needed
+            - Increase `wait_timeout` for slow-loading pages or complex SPAs
+            - Monitor `content_size` to track page complexity and potential performance issues
+
+            Example Usage:
+            Wait for a data table to load before capturing:
+              wait_for='table.data-loaded', full_page=true, wait_timeout=15
+
+            Capture just the visible area immediately:
+              wait_for=None, full_page=false, wait_timeout=10"""
             try:
                 snapshot_tool = SnapshotTool()
                 snapshot_tool._connection_manager = self.connection_manager
@@ -149,13 +202,69 @@ class BrowtrixServer:
 
         @self.mcp.tool
         async def confirmation_alert(
-            message: Annotated[str, Field(description="Alert message")],
-            title: Annotated[str, Field(description="Alert title")] = "Confirmation",
+            message: Annotated[
+                str,
+                Field(
+                    description="The confirmation message to display to the user. Should clearly explain "
+                    "what action is being confirmed. Maximum length: 1000 characters. "
+                    "Example: 'Are you sure you want to delete these 42 files?'"
+                ),
+            ],
+            title: Annotated[
+                str,
+                Field(
+                    description="The dialog title/header text. Use this to categorize the confirmation type. "
+                    "Examples: 'Delete Confirmation', 'Proceed with Action', 'Warning'. "
+                    "Default: 'Confirmation'"
+                ),
+            ] = "Confirmation",
             timeout: Annotated[
-                int, Field(description="Timeout in seconds", ge=5, le=300)
+                int,
+                Field(
+                    description="Maximum time in seconds to wait for user response. After timeout, "
+                    "the dialog closes automatically and returns approved: false. "
+                    "Range: 5-300 seconds. Longer messages should have longer timeouts. "
+                    "Default: 60 seconds.",
+                    ge=5,
+                    le=300,
+                ),
             ] = 60,
         ) -> Annotated[bool, "True if user confirmed, False if cancelled"]:
-            """Confirmation alert with configurable options."""
+            """Displays a modal confirmation dialog in the active browser session requiring user interaction.
+
+            This tool creates a blocking modal dialog that prompts the user to confirm or cancel an action. It returns the user's choice along with timing metrics. The dialog will remain visible until the user responds or the timeout is reached.
+
+            Use Cases:
+            - Confirming destructive actions before execution (e.g., "Delete all items?")
+            - Requesting user approval before proceeding with a workflow step
+            - Implementing human-in-the-loop validation for AI-driven automation
+            - Gathering explicit consent for data operations
+            - Checkpoint verification in multi-step processes
+
+            Interaction Behavior:
+            1. Displays a modal overlay that blocks interaction with the underlying page
+            2. Presents a customizable message and title to the user
+            3. Provides two action buttons: confirm (default: "Yes") and cancel (default: "No")
+            4. Waits for user interaction or timeout, whichever occurs first
+            5. Returns the user's selection with timing information
+
+            Response Handling:
+            - If user clicks confirm button: Returns true with interaction timing
+            - If user clicks cancel button: Returns false with interaction timing
+            - If timeout is reached: Returns false with error indication
+
+            Best Practices:
+            - Use clear, concise messages that explain what the user is confirming
+            - Set appropriate timeouts based on message complexity (longer messages need more time)
+            - For critical actions, include the action consequence in the message
+            - Consider the user's context - don't interrupt time-sensitive workflows
+
+            Example Usage:
+            Simple confirmation:
+              message='Are you sure you want to delete these 42 files?', title='Delete Confirmation', timeout=30
+
+            Critical action with extended timeout:
+              message='This will permanently remove all user data and cannot be undone. Continue?', title='⚠️ Destructive Action', timeout=120"""
             try:
                 alert_tool = AlertTool()
                 alert_tool._connection_manager = self.connection_manager
@@ -178,12 +287,85 @@ class BrowtrixServer:
 
         @self.mcp.tool
         async def question_popup(
-            question: Annotated[str, Field(description="Question to ask")],
-            title: Annotated[str, Field(description="Popup title")] = "Input Required",
-            input_type: Annotated[str, Field(description="Input type")] = "text",
-            validation: Annotated[str, Field(description="Validation type")] = "any",
+            question: Annotated[
+                str,
+                Field(
+                    description="The question or prompt to display to the user. Should clearly indicate "
+                    "what input is expected and in what format. Maximum length: 1000 characters. "
+                    "Example: 'Enter your email address to receive notifications'"
+                ),
+            ],
+            title: Annotated[
+                str,
+                Field(
+                    description="The dialog title/header text. Use this to categorize the input type. "
+                    "Examples: 'API Configuration', 'Enter Credentials', 'Provide Details'. "
+                    "Default: 'Input Required'"
+                ),
+            ] = "Input Required",
+            input_type: Annotated[
+                str,
+                Field(
+                    description="HTML input type affecting keyboard and browser behavior. "
+                    "Options: 'text' (general input), 'email' (email-specific with @ key), "
+                    "'password' (masked input), 'number' (numeric with spinners). "
+                    "Default: 'text'"
+                ),
+            ] = "text",
+            validation: Annotated[
+                str,
+                Field(
+                    description="Validation rule applied to user input. Options: 'any' (no validation), "
+                    "'email' (email format), 'number' (numeric only), 'url' (URL format), "
+                    "'regex' (custom pattern). Default: 'any'"
+                ),
+            ] = "any",
         ) -> Annotated[str, "User input value"]:
-            """Question popup with configurable options."""
+            """Displays an interactive input modal in the active browser session to collect validated user input.
+
+            This tool creates a blocking modal dialog that prompts the user to provide textual or numeric input with optional validation. It supports various input types, validation patterns, and customization options. The dialog ensures data quality through client-side validation before returning the result.
+
+            Use Cases:
+            - Collecting user credentials (email, password) during authentication flows
+            - Gathering configuration parameters from users (API keys, URLs, numeric settings)
+            - Requesting data for form auto-filling or test data generation
+            - Implementing human-in-the-loop data entry for AI workflows
+            - Validating user-provided information with regex patterns
+            - Collecting feedback or notes during automation processes
+
+            Input Types & Validation:
+            - text: Free-form text input (default) - useful for names, descriptions, general input
+            - email: Email-specific input with browser hints - validates against email format
+            - password: Masked password input - characters are hidden for security
+            - number: Numeric-only input with browser spinners - restricts to numeric values
+
+            Validation Options:
+            - any: No specific validation (default) - accepts any input
+            - email: Validates email address format (user@domain.com)
+            - number: Ensures numeric input only
+            - url: Validates URL format (http://, https://)
+            - regex: Custom validation using validation_pattern parameter
+
+            Interaction Behavior:
+            1. Displays a modal overlay that blocks interaction with the underlying page
+            2. Presents a customizable question/prompt and title to the user
+            3. Provides an input field styled according to input_type
+            4. Validates input client-side based on validation rules
+            5. Shows validation errors inline if input doesn't meet requirements
+            6. Returns the validated input value
+
+            Best Practices:
+            - Use clear, specific questions that tell the user exactly what format is expected
+            - Choose the appropriate input_type to trigger correct browser behaviors
+            - Use validation to ensure data quality before processing
+            - For custom formats, use validation: regex with a descriptive error message
+
+            Example Usage:
+            Collect email address:
+              question='Enter your email address to receive notifications', title='Email Setup', input_type='email', validation='email'
+
+            API key collection:
+              question='Enter your API key (format: sk-xxxx-xxxxxxxxxxxx)', title='API Configuration', input_type='text', validation='any'"""
             try:
                 popup_tool._connection_manager = self.connection_manager
                 # Validate and cast input types
