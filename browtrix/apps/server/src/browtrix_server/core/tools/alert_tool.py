@@ -40,7 +40,16 @@ class AlertTool(BaseBrowtrixTool):
     def __init__(self):
         super().__init__(
             name="confirmation-alert",
-            description=" confirmation alert tool with configurable options",
+            description="""Confirmation alert with configurable options.
+
+Displays a modal confirmation dialog in the browser.
+
+Parameters:
+- message (required): Alert message
+- title: Alert title (default: 'Confirmation')
+- timeout: Timeout in seconds (5-300, default: 60)
+
+Returns: approved (boolean), selection_time_ms, and alert options.""",
         )
         self._connection_manager: Optional[Any] = None
 

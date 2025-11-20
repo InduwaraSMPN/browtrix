@@ -41,7 +41,17 @@ class SnapshotTool(BaseBrowtrixTool):
     def __init__(self):
         super().__init__(
             name="html-snapshot",
-            description=" HTML snapshot tool with configurable options and error handling",
+            description="""HTML snapshot with configurable options.
+
+Captures HTML content or screenshot of the current browser page.
+
+Parameters:
+- wait_for: CSS selector to wait for (optional)
+- full_page: Capture full page (default: true)
+- wait_timeout: Wait timeout in seconds (1-60, default: 10)
+- quality: Image quality (1-100, default: 100)
+
+Returns: HTML content, page URL, title, content size, and snapshot metadata.""",
         )
         self._connection_manager: Optional[Any] = None
 

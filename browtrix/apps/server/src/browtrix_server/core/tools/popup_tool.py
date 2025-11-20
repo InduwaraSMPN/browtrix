@@ -45,7 +45,18 @@ class PopupTool(BaseBrowtrixTool):
     def __init__(self):
         super().__init__(
             name="question-popup",
-            description=" question popup tool with configurable options",
+            description="""Question popup with configurable options.
+
+Displays an input modal in the browser for user input.
+
+Parameters:
+- question (required): Question to ask
+- title: Popup title (default: 'Input Required')
+- input_type: Input type (text, email, password, number; default: text)
+- validation: Validation type (any, email, number, url, regex; default: any)
+- timeout: Timeout in seconds (5-300, default: 60)
+
+Returns: value, validation_passed, input_time_ms, and popup options.""",
         )
         self._connection_manager: Optional[Any] = None
 
