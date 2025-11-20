@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { ModeToggle } from "./mode-toggle";
 import { useBrowtrix } from "@/lib/browtrix-context";
 
 export default function Header() {
@@ -20,15 +19,7 @@ export default function Header() {
 							);
 						})}
 					</nav>
-					<div className="flex items-center gap-2">
-						<div className="flex items-center gap-2 mr-4">
-							<div className={`w-2 h-2 rounded-full ${isConnected ? "bg-green-500" : "bg-red-500"}`} />
-							<span className="text-xs text-muted-foreground">
-								{isConnected ? "Connected" : "Disconnected"}
-							</span>
-						</div>
-						<ModeToggle />
-					</div>
+					
 				</div>
 			</div>
 		</div>
