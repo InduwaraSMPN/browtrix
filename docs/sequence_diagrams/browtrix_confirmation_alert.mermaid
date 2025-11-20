@@ -5,7 +5,7 @@ sequenceDiagram
     participant WebApp as Next.js App
     actor WebUser as Browser User
 
-    Client->>Server: call_tool("browtrix_confirmation_alert", msg="Deploy?")
+    Client->>Server: call_tool("confirmation-alert", msg="Deploy?")
     activate Server
 
     rect rgb(240, 240, 240)

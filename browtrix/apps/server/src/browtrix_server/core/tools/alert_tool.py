@@ -39,7 +39,7 @@ class AlertTool(BaseBrowtrixTool):
 
     def __init__(self):
         super().__init__(
-            name="browtrix_confirmation_alert",
+            name="confirmation-alert",
             description=" confirmation alert tool with configurable options",
         )
         self._connection_manager: Optional[Any] = None
@@ -98,7 +98,7 @@ class SimpleAlertTool(BaseBrowtrixTool):
 
     def __init__(self):
         super().__init__(
-            name="browtrix_confirmation_alert_simple",
+            name="confirmation-alert_simple",
             description="Simple confirmation alert tool (backward compatibility)",
         )
 

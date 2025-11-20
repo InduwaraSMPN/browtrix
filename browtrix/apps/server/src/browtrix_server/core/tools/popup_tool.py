@@ -44,7 +44,7 @@ class PopupTool(BaseBrowtrixTool):
 
     def __init__(self):
         super().__init__(
-            name="browtrix_question_popup",
+            name="question-popup",
             description=" question popup tool with configurable options",
         )
         self._connection_manager: Optional[Any] = None
@@ -121,7 +121,7 @@ class SimplePopupTool(BaseBrowtrixTool):
 
     def __init__(self):
         super().__init__(
-            name="browtrix_question_popup_simple",
+            name="question-popup_simple",
             description="Simple question popup tool (backward compatibility)",
         )
 

@@ -67,9 +67,9 @@ Refactor to use `FastAPI` as the main wrapper to support WebSockets alongside Fa
 - Mount `FastMCP` app to FastAPI using `mcp.http_app(transport="sse")` for compatibility.
 - Add `@app.websocket("/ws")` endpoint that uses `ConnectionManager`.
 - Implement MCP Tools:
-    - `browtrix_html_snapshot()`: Calls `manager.send_request("GET_SNAPSHOT")`.
-    - `browtrix_confirmation_alert(message)`: Calls `manager.send_request("SHOW_CONFIRM", {msg})`.
-    - `browtrix_question_popup(question)`: Calls `manager.send_request("SHOW_INPUT", {question})`.
+    - `html-snapshot()`: Calls `manager.send_request("GET_SNAPSHOT")`.
+    - `confirmation-alert(message)`: Calls `manager.send_request("SHOW_CONFIRM", {msg})`.
+    - `question-popup(question)`: Calls `manager.send_request("SHOW_INPUT", {question})`.
 
 #### 1.6 Entry Point (`src/browtrix_server/__main__.py`)
 - Use `uvicorn` to run the app based on settings.
@@ -123,9 +123,9 @@ This component will live in the root layout or page.
     ```bash
     wscat -c ws://localhost:8000/ws
     ```
-- **Snapshot**: Use MCP Client to call `browtrix_html_snapshot`. Verify Markdown is returned.
-- **Alert**: Call `browtrix_confirmation_alert`. Verify Modal appears. Click Confirm. Verify "True" returned.
-- **Input**: Call `browtrix_question_popup`. Verify Input appears. Type text. Verify text returned.
+- **Snapshot**: Use MCP Client to call `html-snapshot`. Verify Markdown is returned.
+- **Alert**: Call `confirmation-alert`. Verify Modal appears. Click Confirm. Verify "True" returned.
+- **Input**: Call `question-popup`. Verify Input appears. Type text. Verify text returned.
 
 ## 4. Detailed File Changes
 

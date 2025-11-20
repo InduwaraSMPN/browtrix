@@ -146,9 +146,9 @@ export function BrowtrixOverlay() {
           {activeRequest.type === "SHOW_CONFIRM" ? (
             <>
               <Button variant="outline" onClick={() => handleConfirm(false)}>
-                No / Deny
+                No
               </Button>
-              <Button onClick={() => handleConfirm(true)}>Yes / Approve</Button>
+              <Button onClick={() => handleConfirm(true)}>Yes</Button>
             </>
           ) : (
             <>

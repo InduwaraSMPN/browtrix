@@ -110,7 +110,7 @@ class BrowtrixServer:
 
         # HTML Snapshot Tool
         @self.mcp.tool
-        async def browtrix_html_snapshot(
+        async def html_snapshot(
             wait_for: Annotated[
                 Optional[str], Field(description="CSS selector to wait for")
             ] = None,
@@ -138,17 +138,17 @@ class BrowtrixServer:
                     return result.data["html_content"]
                 else:
                     raise ToolExecutionError(
-                        "browtrix_html_snapshot", result.error or "Unknown error"
+                        "html_snapshot", result.error or "Unknown error"
                     )
 
             except Exception as e:
                 logger.error("Snapshot tool failed", error=str(e), exc_info=True)
-                raise ToolExecutionError("browtrix_html_snapshot", str(e))
+                raise ToolExecutionError("html_snapshot", str(e))
 
         # Confirmation Alert Tool
 
         @self.mcp.tool
-        async def browtrix_confirmation_alert(
+        async def confirmation_alert(
             message: Annotated[str, Field(description="Alert message")],
             title: Annotated[str, Field(description="Alert title")] = "Confirmation",
             timeout: Annotated[
@@ -166,18 +166,18 @@ class BrowtrixServer:
                     return result.data["approved"]
                 else:
                     raise ToolExecutionError(
-                        "browtrix_confirmation_alert", result.error or "Unknown error"
+                        "confirmation_alert", result.error or "Unknown error"
                     )
 
             except Exception as e:
                 logger.error("Alert tool failed", error=str(e), exc_info=True)
-                raise ToolExecutionError("browtrix_confirmation_alert", str(e))
+                raise ToolExecutionError("confirmation_alert", str(e))
 
         # Question Popup Tool
         popup_tool = PopupTool()
 
         @self.mcp.tool
-        async def browtrix_question_popup(
+        async def question_popup(
             question: Annotated[str, Field(description="Question to ask")],
             title: Annotated[str, Field(description="Popup title")] = "Input Required",
             input_type: Annotated[str, Field(description="Input type")] = "text",
@@ -209,13 +209,13 @@ class BrowtrixServer:
                     return result.data["value"]
                 else:
                     raise ToolExecutionError(
-                        "browtrix_question_popup",
+                        "question_popup",
                         str(result.error) if result.error else "Unknown error",
                     )
 
             except Exception as e:
                 logger.error("Popup tool failed", error=str(e), exc_info=True)
-                raise ToolExecutionError("browtrix_question_popup", str(e))
+                raise ToolExecutionError("question_popup", str(e))
 
     def _setup_routes(self):
         """Setup HTTP routes."""

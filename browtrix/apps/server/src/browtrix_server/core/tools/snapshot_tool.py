@@ -41,7 +41,7 @@ class SnapshotTool(BaseBrowtrixTool):
 
     def __init__(self):
         super().__init__(
-            name="browtrix_html_snapshot",
+            name="html-snapshot",
             description=" HTML snapshot tool with configurable options and error handling",
         )
         self._connection_manager: Optional[Any] = None
@@ -116,7 +116,7 @@ class SimpleSnapshotTool(BaseBrowtrixTool):
 
     def __init__(self):
         super().__init__(
-            name="browtrix_html_snapshot_simple",
+            name="html-snapshot_simple",
             description="Simple HTML snapshot tool (backward compatibility)",
         )
 
