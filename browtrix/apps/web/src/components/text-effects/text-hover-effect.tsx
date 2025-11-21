@@ -39,7 +39,6 @@ export const TextHoverEffect = ({
 			onMouseMove={(e) => setCursor({ x: e.clientX, y: e.clientY })}
 			className="select-none"
 		>
-			<title>Text Hover Effect</title>
 			<defs>
 				<linearGradient
 					id="textGradient"

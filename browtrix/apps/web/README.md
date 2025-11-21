@@ -53,7 +53,17 @@ cp .env.example .env.local
 
 ### Environment Variables
 
+1. Copy the example configuration:
+   ```bash
+   cp .env.example .env.local
+   ```
+
+2. Configure your environment variables in `.env.local`:
+
 ```env
+# API Server URL (for HTTP requests)
+NEXT_PUBLIC_SERVER_URL=http://localhost:8000
+
 # WebSocket URL for MCP server connection
 NEXT_PUBLIC_BROWTRIX_MCP_WS_URL=ws://localhost:8000/ws
 ```

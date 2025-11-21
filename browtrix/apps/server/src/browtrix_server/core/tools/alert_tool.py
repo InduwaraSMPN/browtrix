@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 from ..tools.base import BaseBrowtrixTool, ToolResult, ToolValidator
 from ..types.requests import ConfirmationRequest
 from ..connection.errors import BrowserConnectionError, ValidationError
+from ...settings import settings
 
 
 class AlertOptions(BaseModel):
@@ -37,9 +38,9 @@ class AlertOptions(BaseModel):
             "Range: 5-300 seconds. Longer messages should have longer timeouts. "
             "Default: 60 seconds.",
             ge=5,
-            le=300,
+            le=settings.alert_max_timeout,
         ),
-    ] = 60
+    ] = settings.alert_default_timeout
     confirm_text: Annotated[
         str,
         Field(

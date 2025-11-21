@@ -1,12 +1,20 @@
 import pytest
+from unittest.mock import patch
 from pydantic import ValidationError
-from browtrix_server.settings import Settings, settings
+from browtrix_server.settings import Settings
 
 
 def test_settings_defaults():
-    assert settings.host == "0.0.0.0"
-    assert settings.port == 8000
-    assert settings.log_level == "info"
+    # Create a fresh instance with no env file to test true defaults
+    class SettingsNoEnv(Settings):
+        model_config = Settings.model_config.copy()
+        model_config["env_file"] = None
+
+    with patch.dict("os.environ", {}, clear=True):
+        defaults = SettingsNoEnv()
+        assert defaults.host == "0.0.0.0"
+        assert defaults.port == 8000
+        assert defaults.log_level == "info"
 
 
 def test_settings_env_override(monkeypatch):

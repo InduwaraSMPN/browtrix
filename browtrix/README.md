@@ -72,15 +72,20 @@ cp .env.example .env
 
 ### Environment Variables
 
-```env
-# For the web application
-NEXT_PUBLIC_BROWTRIX_MCP_WS_URL=ws://localhost:8000/ws
+The server uses a comprehensive configuration system based on environment variables.
 
-# For the server (optional, defaults shown)
-HOST=localhost
-PORT=8000
-MAX_CONNECTIONS=10
-REQUEST_TIMEOUT=30
+1. Copy the example configuration:
+   ```bash
+   cp apps/server/.env.example apps/server/.env
+   ```
+
+2. Configure your environment variables in `apps/server/.env`.
+
+See [apps/server/ENVIRONMENT.md](apps/server/ENVIRONMENT.md) for a complete list of available configuration options.
+
+For the web application:
+```env
+NEXT_PUBLIC_BROWTRIX_MCP_WS_URL=ws://localhost:8000/ws
 ```
 
 ### Development

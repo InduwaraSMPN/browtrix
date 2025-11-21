@@ -55,13 +55,16 @@ pip install -e .
 
 ### Environment Variables
 
-```env
-# Server configuration (optional, defaults shown)
-HOST=localhost
-PORT=8000
-MAX_CONNECTIONS=10
-REQUEST_TIMEOUT=30
-```
+The server uses a comprehensive configuration system based on environment variables.
+
+1. Copy the example configuration:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Configure your environment variables in `.env`.
+
+See [ENVIRONMENT.md](ENVIRONMENT.md) for a complete list of available configuration options.
 
 ### Development
 

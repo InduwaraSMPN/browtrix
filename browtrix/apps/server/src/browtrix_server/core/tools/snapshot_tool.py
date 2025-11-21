@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 from ..tools.base import BaseBrowtrixTool, ToolResult, ToolValidator
 from ..types.requests import SnapshotRequest
 from ..connection.errors import BrowserConnectionError, ValidationError
+from ...settings import settings
 
 
 class SnapshotOptions(BaseModel):
@@ -36,9 +37,9 @@ class SnapshotOptions(BaseModel):
             "Range: 1-60 seconds. If the element doesn't appear within this time, "
             "the capture proceeds anyway. Increase for slow-loading pages.",
             ge=1,
-            le=60,
+            le=settings.snapshot_max_timeout,
         ),
-    ] = 10
+    ] = settings.snapshot_default_timeout
     quality: Annotated[
         int,
         Field(

@@ -56,10 +56,15 @@ class ServerConfig(BaseModel):
 
     host: str = Field(default=settings.host, description="Server host")
     port: int = Field(default=settings.port, description="Server port")
-    max_connections: int = Field(default=10, description="Max browser connections")
-    request_timeout: float = Field(default=30.0, description="Default request timeout")
+    max_connections: int = Field(
+        default=settings.max_connections, description="Max browser connections"
+    )
+    request_timeout: float = Field(
+        default=settings.request_timeout, description="Default request timeout"
+    )
     enable_health_checks: bool = Field(
-        default=True, description="Enable health check endpoints"
+        default=settings.enable_health_checks,
+        description="Enable health check endpoints",
     )
 
 
@@ -76,13 +81,13 @@ class BrowtrixServer:
         )
 
         # Initialize FastMCP
-        self.mcp = FastMCP("browtrix-server")
+        self.mcp = FastMCP(settings.mcp_server_name)
 
         # Initialize FastAPI
         self.app = FastAPI(
             title="Browtrix MCP Server",
             description="Model Context Protocol server for browser automation",
-            version="1.0.0",
+            version=settings.mcp_server_version,
             lifespan=self.lifespan,
         )
 
@@ -496,7 +501,11 @@ class BrowtrixServer:
 
         # Mount MCP app
         try:
-            mcp_app = self.mcp.http_app(transport="sse")
+            # Validate transport type
+            transport = settings.mcp_transport
+            if transport not in ["http", "streamable-http", "sse"]:
+                transport = "sse"  # fallback to default
+            mcp_app = self.mcp.http_app(transport=transport)  # type: ignore
             self.app.mount("/mcp", mcp_app)
         except Exception as e:
             logger.error("Failed to mount MCP app", error=str(e))

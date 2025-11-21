@@ -18,6 +18,7 @@ from .errors import (
 )
 from ..types.requests import BrowserRequest
 from ..types.responses import BrowserResponse, ConnectionInfo, HealthCheckResponse
+from ...settings import settings
 
 logger = structlog.get_logger(__name__)
 
@@ -25,9 +26,7 @@ logger = structlog.get_logger(__name__)
 class ConnectionHealthMonitor:
     """Monitor connection health and detect stale connections."""
 
-    def __init__(
-        self, max_idle_time: float = 1800.0
-    ):  # 30 minutes - longer timeout for development
+    def __init__(self, max_idle_time: float = 1800.0):
         self.max_idle_time = max_idle_time
         self.last_activity: Dict[str, datetime] = {}
 
@@ -57,17 +56,26 @@ class ConnectionHealthMonitor:
 
 
 class ConnectionManager:
-    """Connection manager with  features."""
+    """Manage browser connections with health monitoring and statistics."""
 
     def __init__(
         self,
-        max_connections: int = 10,
-        request_timeout: float = 30.0,
-        health_check_interval: float = 60.0,
+        max_connections: Optional[int] = None,
+        request_timeout: Optional[float] = None,
+        health_check_interval: Optional[float] = None,
     ):
-        self.max_connections = max_connections
-        self.request_timeout = request_timeout
-        self.health_check_interval = health_check_interval
+        # Use settings if not provided
+        self.max_connections = (
+            max_connections if max_connections is not None else settings.max_connections
+        )
+        self.request_timeout = (
+            request_timeout if request_timeout is not None else settings.request_timeout
+        )
+        self.health_check_interval = (
+            health_check_interval
+            if health_check_interval is not None
+            else settings.health_check_interval
+        )
 
         # Connection tracking
         self.active_connections: Dict[str, WebSocket] = {}
@@ -79,7 +87,9 @@ class ConnectionManager:
         self.active_requests: Dict[str, BrowserRequest] = {}
 
         # Health monitoring
-        self.health_monitor = ConnectionHealthMonitor()
+        self.health_monitor = ConnectionHealthMonitor(
+            max_idle_time=settings.max_idle_time
+        )
         self.start_time = time.time()
 
         # Statistics
