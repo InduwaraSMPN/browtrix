@@ -63,11 +63,17 @@ A powerful Model Context Protocol (MCP) server for browser automation, providing
 git clone https://github.com/InduwaraSMPN/browtrix.git
 cd browtrix
 
-# Install all dependencies using Turbo
+# Install Node.js dependencies
 bun install
 
-# Set environment variables (if available)
-cp .env.example .env
+# Install Python dependencies
+cd apps/server
+uv sync
+cd ../..
+
+# Set environment variables
+cp apps/server/.env.example apps/server/.env
+cp apps/web/.env.example apps/web/.env
 ```
 
 ### Environment Variables
