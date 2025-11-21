@@ -41,22 +41,22 @@ A powerful Model Context Protocol (MCP) server for browser automation that provi
 
 ### Installation
 
-# Clone the repository
-```bash
-git clone https://github.com/InduwaraSMPN/browtrix.git
-```
-```bash
-cd browtrix/apps/server
-```
+1. Clone the repository
+   ```bash
+   git clone https://github.com/InduwaraSMPN/browtrix.git
+   ```
+   ```bash
+   cd browtrix/apps/server
+   ```
 
-# Install dependencies with uv
-```bash
-uv install
-```
+2. Install dependencies with uv
+   ```bash
+   uv install
+   ```
 
-# Or with pip
-```bash
-pip install -e .```
+3. Or with pip
+   ```bash
+   pip install -e .```
 
 ### Environment Variables
 
@@ -73,28 +73,28 @@ See [ENVIRONMENT.md](ENVIRONMENT.md) for a complete list of available configurat
 
 ### Development
 
-# Start development server with uv
-```bash
-uv run python -m browtrix_server.__main__
-```
+1. Start development server with uv
+   ```bash
+   uv run python -m browtrix_server.__main__
+   ```
 
-# Or using npm script
-```bash
-npm run dev
-```
-# The server will be available at http://localhost:8000
+2. Or using npm script
+   ```bash
+   npm run dev
+   ```
+   The server will be available at http://localhost:8000
 
 ### Production
 
-# Start production server with uv
-```bash
-uv run python -m browtrix_server.__main__
-```
+1. Start production server with uv
+   ```bash
+   uv run python -m browtrix_server.__main__
+   ```
 
-# Or using npm script
-```bash
-npm run start
-```
+2. Or using npm script
+   ```bash
+   npm run start
+   ```
 
 ## Project Structure
 
@@ -215,54 +215,54 @@ question_popup(
 
 ## Development Workflow
 
-# Code quality checks: Lint code with ruff
-```bash
-npm run lint
-```
+1. Code quality checks: Lint code with ruff
+   ```bash
+   npm run lint
+   ```
 
-# Code quality checks: Type checking with typer
-```bash
-npm run check-types
-```
+2. Code quality checks: Type checking with typer
+   ```bash
+   npm run check-types
+   ```
 
-# Code quality checks: Format code with ruff
-```bash
-npm run format
-```
+3. Code quality checks: Format code with ruff
+   ```bash
+   npm run format
+   ```
 
-# Development: Start development server
-```bash
-npm run dev
-```
+4. Development: Start development server
+   ```bash
+   npm run dev
+   ```
 
-# Development: Run pytest test suite
-```bash
-npm run test
-```
+5. Development: Run pytest test suite
+   ```bash
+   npm run test
+   ```
 
-# Build validation: Run all tests with coverage
-```bash
-npm run test
-```
+6. Build validation: Run all tests with coverage
+   ```bash
+   npm run test
+   ```
 
 ## Testing
 
 ### Running Tests
 
-# Run all tests
-```bash
-npm run test
-```
+1. Run all tests
+   ```bash
+   npm run test
+   ```
 
-# Or with uv directly
-```bash
-uv run pytest src/browtrix_server/tests
-```
+2. Or with uv directly
+   ```bash
+   uv run pytest src/browtrix_server/tests
+   ```
 
-# Run with coverage
-```bash
-npm run test --cov=src/browtrix_server
-```
+3. Run with coverage
+   ```bash
+   npm run test --cov=src/browtrix_server
+   ```
 
 ### Test Structure
 - Unit tests for individual tools and components
@@ -340,31 +340,32 @@ npm run check-types
 
 ### Development Environment
 
-# Install dependencies
-```bash
-uv install
-```
+1. Install dependencies
+   ```bash
+   uv install
+   ```
 
-# Start development server```bash
-npm run dev
-```
+2. Start development server
+   ```bash
+   npm run dev
+   ```
 
-# Verify server health
-```bash
-curl http://localhost:8000/health
-```
+3. Verify server health
+   ```bash
+   curl http://localhost:8000/health
+   ```
 
 ### Production Environment
 
-# Start production server
-```bash
-npm run start
-```
+1. Start production server
+   ```bash
+   npm run start
+   ```
 
-# Health check
-```bash
-curl http://localhost:8000/health
-```
+2. Health check
+   ```bash
+   curl http://localhost:8000/health
+   ```
 
 ## License
 

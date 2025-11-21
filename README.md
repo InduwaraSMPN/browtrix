@@ -58,37 +58,37 @@ A powerful Model Context Protocol (MCP) server for browser automation, providing
 
 ### Installation
 
-# Clone the repository
-```bash
-git clone https://github.com/InduwaraSMPN/browtrix.git
-```
-```bash
-cd browtrix
-```
+1. Clone the repository
+   ```bash
+   git clone https://github.com/InduwaraSMPN/browtrix.git
+   ```
+   ```bash
+   cd browtrix
+   ```
 
-# Install Node.js dependencies
-```bash
-bun install
-```
+2. Install Node.js dependencies
+   ```bash
+   bun install
+   ```
 
-# Install Python dependencies
-```bash
-cd apps/server
-```
-```bash
-uv sync
-```
-```bash
-cd ../..
-```
+3. Install Python dependencies
+   ```bash
+   cd apps/server
+   ```
+   ```bash
+   uv sync
+   ```
+   ```bash
+   cd ../..
+   ```
 
-# Set environment variables
-```bash
-cp apps/server/.env.example apps/server/.env
-```
-```bash
-cp apps/web/.env.example apps/web/.env
-```
+4. Set environment variables
+   ```bash
+   cp apps/server/.env.example apps/server/.env
+   ```
+   ```bash
+   cp apps/web/.env.example apps/web/.env
+   ```
 
 ### Environment Variables
 
@@ -110,32 +110,32 @@ NEXT_PUBLIC_BROWTRIX_MCP_WS_URL=ws://localhost:8000/ws
 
 ### Development
 
-# Start all services (server on port 8000, web app on port 3001)
-```bash
-bun run dev
-```
+1. Start all services (server on port 8000, web app on port 3001)
+   ```bash
+   bun run dev
+   ```
 
-# Start individual services: Web application
-```bash
-bun run dev:web
-```
+2. Start individual services: Web application
+   ```bash
+   bun run dev:web
+   ```
 
-# Start individual services: MCP server
-```bash
-bun run dev:server
-```
+3. Start individual services: MCP server
+   ```bash
+   bun run dev:server
+   ```
 
 ### Production
 
-# Build all applications for production
-```bash
-bun run build
-```
+1. Build all applications for production
+   ```bash
+   bun run build
+   ```
 
-# Start production servers
-```bash
-bun run start
-```
+2. Start production servers
+   ```bash
+   bun run start
+   ```
 
 ## Project Structure
 
@@ -247,52 +247,52 @@ Collects validated user input through interactive modal forms.
 
 ## Development Workflow
 
-# Lint all code
-```bash
-bun run lint
-```
+1. Lint all code
+   ```bash
+   bun run lint
+   ```
 
-# TypeScript validation across monorepo
-```bash
-bun run check-types
-```
+2. TypeScript validation across monorepo
+   ```bash
+   bun run check-types
+   ```
 
-# Start all development services
-```bash
-bun run dev
-```
+3. Start all development services
+   ```bash
+   bun run dev
+   ```
 
-# Start web app only
-```bash
-bun run dev:web
-```
+4. Start web app only
+   ```bash
+   bun run dev:web
+   ```
 
-# Start server only
-```bash
-bun run dev:server
-```
+5. Start server only
+   ```bash
+   bun run dev:server
+   ```
 
-# Build all applications
-```bash
-bun run build
-```
+6. Build all applications
+   ```bash
+   bun run build
+   ```
 
 ## Testing
 
 ### Running Tests
 
-# Run Python server tests
-```bash
-cd apps/server
-```
-```bash
-bun run test
-```
+1. Run Python server tests
+   ```bash
+   cd apps/server
+   ```
+   ```bash
+   bun run test
+   ```
 
-# Run with coverage
-```bash
-bun run test --cov=src/browtrix_server
-```
+2. Run with coverage
+   ```bash
+   bun run test --cov=src/browtrix_server
+   ```
 
 ### Test Structure
 - Unit tests for individual tools and components
@@ -353,45 +353,45 @@ bun run check-types
 
 ### Development Environment
 
-# Install dependencies
-```bash
-bun install
-```
+1. Install dependencies
+   ```bash
+   bun install
+   ```
 
-# Start development servers
-```bash
-bun run dev
-```
+2. Start development servers
+   ```bash
+   bun run dev
+   ```
 
-# Verify server connection
-```bash
-curl http://localhost:8000/health
-```
+3. Verify server connection
+   ```bash
+   curl http://localhost:8000/health
+   ```
 
-# Verify web application
-```bash
-curl http://localhost:3001/api/health
-```
+4. Verify web application
+   ```bash
+   curl http://localhost:3001/api/health
+   ```
 
 ### Production Environment
 
-# Build production bundles
-```bash
-bun run build
-```
+1. Build production bundles
+   ```bash
+   bun run build
+   ```
 
-# Start production servers
-```bash
-bun run start
-```
+2. Start production servers
+   ```bash
+   bun run start
+   ```
 
-# Health checks
-```bash
-curl http://localhost:8000/health
-```
-```bash
-curl http://localhost:3001/api/health
-```
+3. Health checks
+   ```bash
+   curl http://localhost:8000/health
+   ```
+   ```bash
+   curl http://localhost:3001/api/health
+   ```
 
 ## Browser Compatibility
 

@@ -39,23 +39,23 @@ A modern, responsive web application built with Next.js 15, React 19, and Tailwi
 
 ### Installation
 
-# Clone the repository
-```bash
-git clone https://github.com/marketrix-ai/browtrix.git
-```
-```bash
-cd browtrix/apps/web
-```
+1. Clone the repository
+   ```bash
+   git clone https://github.com/marketrix-ai/browtrix.git
+   ```
+   ```bash
+   cd browtrix/apps/web
+   ```
 
-# Install dependencies
-```bash
-bun install
-```
+2. Install dependencies
+   ```bash
+   bun install
+   ```
 
-# Set environment variables
-```bash
-cp .env.example .env.local
-```
+3. Set environment variables
+   ```bash
+   cp .env.example .env.local
+   ```
 
 ### Environment Variables
 
@@ -76,23 +76,23 @@ NEXT_PUBLIC_BROWTRIX_MCP_WS_URL=ws://localhost:8000/ws
 
 ### Development
 
-# Start development server
-```bash
-bun run dev
-```
-# The application will be available at http://localhost:3001
+1. Start development server
+   ```bash
+   bun run dev
+   ```
+   The application will be available at http://localhost:3001
 
 ### Production
 
-# Build for production
-```bash
-bun run build
-```
+1. Build for production
+   ```bash
+   bun run build
+   ```
 
-# Start production server
-```bash
-bun run start
-```
+2. Start production server
+   ```bash
+   bun run start
+   ```
 
 ## Project Structure
 
@@ -164,30 +164,30 @@ Based on Radix UI primitives with custom styling:
 
 ## Development Workflow
 
-# Format and lint code
-```bash
-bun run check
-```
+1. Format and lint code
+   ```bash
+   bun run check
+   ```
 
-# TypeScript validation
-```bash
-bun run check-types
-```
+2. TypeScript validation
+   ```bash
+   bun run check-types
+   ```
 
-# Start dev server
-```bash
-bun run dev
-```
+3. Start dev server
+   ```bash
+   bun run dev
+   ```
 
-# Shortcut for web app only
-```bash
-bun run dev:web
-```
+4. Shortcut for web app only
+   ```bash
+   bun run dev:web
+   ```
 
-# Production build validation
-```bash
-bun run build
-```
+5. Production build validation
+   ```bash
+   bun run build
+   ```
 
 ## MCP Integration
 
@@ -234,37 +234,37 @@ bun run check
 
 ### Development Environment
 
-# Install dependencies
-```bash
-bun install
-```
+1. Install dependencies
+   ```bash
+   bun install
+   ```
 
-# Start development server
-```bash
-bun run dev
-```
+2. Start development server
+   ```bash
+   bun run dev
+   ```
 
-# Verify MCP server connection
-```bash
-curl http://localhost:8000/health
-```
+3. Verify MCP server connection
+   ```bash
+   curl http://localhost:8000/health
+   ```
 
 ### Production Environment
 
-# Build production bundle
-```bash
-bun run build
-```
+1. Build production bundle
+   ```bash
+   bun run build
+   ```
 
-# Start production server
-```bash
-bun run start
-```
+2. Start production server
+   ```bash
+   bun run start
+   ```
 
-# Health check
-```bash
-curl http://localhost:3001/api/health
-```
+3. Health check
+   ```bash
+   curl http://localhost:3001/api/health
+   ```
 
 ## Monitoring and Health
 
