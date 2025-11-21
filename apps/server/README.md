@@ -41,17 +41,22 @@ A powerful Model Context Protocol (MCP) server for browser automation that provi
 
 ### Installation
 
-```bash
 # Clone the repository
+```bash
 git clone https://github.com/InduwaraSMPN/browtrix.git
+```
+```bash
 cd browtrix/apps/server
+```
 
 # Install dependencies with uv
+```bash
 uv install
+```
 
 # Or with pip
-pip install -e .
-```
+```bash
+pip install -e .```
 
 ### Environment Variables
 
@@ -68,23 +73,26 @@ See [ENVIRONMENT.md](ENVIRONMENT.md) for a complete list of available configurat
 
 ### Development
 
+# Start development server with uv
 ```bash
-# Start development server
 uv run python -m browtrix_server.__main__
+```
 
 # Or using npm script
+```bash
 npm run dev
-
-# The server will be available at http://localhost:8000
 ```
+# The server will be available at http://localhost:8000
 
 ### Production
 
+# Start production server with uv
 ```bash
-# Start production server
 uv run python -m browtrix_server.__main__
+```
 
 # Or using npm script
+```bash
 npm run start
 ```
 
@@ -207,31 +215,52 @@ question_popup(
 
 ## Development Workflow
 
+# Code quality checks: Lint code with ruff
 ```bash
-# Code quality checks
-npm run lint          # Lint code with ruff
-npm run check-types   # Type checking with typer
-npm run format        # Format code with ruff
+npm run lint
+```
 
-# Development
-npm run dev           # Start development server
-npm run test          # Run pytest test suite
+# Code quality checks: Type checking with typer
+```bash
+npm run check-types
+```
 
-# Build validation
-npm run test          # Run all tests with coverage
+# Code quality checks: Format code with ruff
+```bash
+npm run format
+```
+
+# Development: Start development server
+```bash
+npm run dev
+```
+
+# Development: Run pytest test suite
+```bash
+npm run test
+```
+
+# Build validation: Run all tests with coverage
+```bash
+npm run test
 ```
 
 ## Testing
 
 ### Running Tests
-```bash
+
 # Run all tests
+```bash
 npm run test
+```
 
 # Or with uv directly
+```bash
 uv run pytest src/browtrix_server/tests
+```
 
 # Run with coverage
+```bash
 npm run test --cov=src/browtrix_server
 ```
 
@@ -302,29 +331,38 @@ This project uses ruff for code formatting and linting. Ensure your code passes 
 
 ```bash
 npm run lint
+```
+```bash
 npm run check-types
 ```
 
 ## Environment Setup
 
 ### Development Environment
-```bash
-# Install dependencies
-uv install
 
-# Start development server
+# Install dependencies
+```bash
+uv install
+```
+
+# Start development server```bash
 npm run dev
+```
 
 # Verify server health
+```bash
 curl http://localhost:8000/health
 ```
 
 ### Production Environment
-```bash
+
 # Start production server
+```bash
 npm run start
+```
 
 # Health check
+```bash
 curl http://localhost:8000/health
 ```
 
@@ -339,5 +377,3 @@ For support and questions:
 - Check the health endpoint for server status
 - Review structured logs for debugging information
 - Check the web application documentation for integration details
-
----

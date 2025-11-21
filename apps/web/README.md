@@ -39,15 +39,21 @@ A modern, responsive web application built with Next.js 15, React 19, and Tailwi
 
 ### Installation
 
-```bash
 # Clone the repository
+```bash
 git clone https://github.com/marketrix-ai/browtrix.git
+```
+```bash
 cd browtrix/apps/web
+```
 
 # Install dependencies
+```bash
 bun install
+```
 
 # Set environment variables
+```bash
 cp .env.example .env.local
 ```
 
@@ -70,20 +76,21 @@ NEXT_PUBLIC_BROWTRIX_MCP_WS_URL=ws://localhost:8000/ws
 
 ### Development
 
-```bash
 # Start development server
+```bash
 bun run dev
-
-# The application will be available at http://localhost:3001
 ```
+# The application will be available at http://localhost:3001
 
 ### Production
 
-```bash
 # Build for production
+```bash
 bun run build
+```
 
 # Start production server
+```bash
 bun run start
 ```
 
@@ -139,7 +146,6 @@ Based on Radix UI primitives with custom styling:
 - Modal dialogs and alerts
 - Dropdown menus
 - Loading states
--
 
 ## Browser Compatibility
 
@@ -158,17 +164,29 @@ Based on Radix UI primitives with custom styling:
 
 ## Development Workflow
 
+# Format and lint code
 ```bash
-# Code quality checks
-bun run check          # Format and lint code
-bun run check-types    # TypeScript validation
+bun run check
+```
 
-# Development
-bun run dev            # Start dev server
-bun run dev:web        # Shortcut for web app only
+# TypeScript validation
+```bash
+bun run check-types
+```
 
-# Build validation
-bun run build          # Production build
+# Start dev server
+```bash
+bun run dev
+```
+
+# Shortcut for web app only
+```bash
+bun run dev:web
+```
+
+# Production build validation
+```bash
+bun run build
 ```
 
 ## MCP Integration
@@ -215,26 +233,36 @@ bun run check
 ## Environment Setup
 
 ### Development Environment
-```bash
+
 # Install dependencies
+```bash
 bun install
+```
 
 # Start development server
+```bash
 bun run dev
+```
 
 # Verify MCP server connection
+```bash
 curl http://localhost:8000/health
 ```
 
 ### Production Environment
-```bash
+
 # Build production bundle
+```bash
 bun run build
+```
 
 # Start production server
+```bash
 bun run start
+```
 
 # Health check
+```bash
 curl http://localhost:3001/api/health
 ```
 
@@ -264,5 +292,3 @@ For support and questions:
 - Create an issue in the GitHub repository
 - Check the [documentation](./docs)
 - Review the MCP server [API documentation](../../apps/server)
-
----

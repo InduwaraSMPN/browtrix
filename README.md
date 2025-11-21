@@ -58,21 +58,35 @@ A powerful Model Context Protocol (MCP) server for browser automation, providing
 
 ### Installation
 
-```bash
 # Clone the repository
+```bash
 git clone https://github.com/InduwaraSMPN/browtrix.git
+```
+```bash
 cd browtrix
+```
 
 # Install Node.js dependencies
+```bash
 bun install
+```
 
 # Install Python dependencies
+```bash
 cd apps/server
+```
+```bash
 uv sync
+```
+```bash
 cd ../..
+```
 
 # Set environment variables
+```bash
 cp apps/server/.env.example apps/server/.env
+```
+```bash
 cp apps/web/.env.example apps/web/.env
 ```
 
@@ -96,22 +110,30 @@ NEXT_PUBLIC_BROWTRIX_MCP_WS_URL=ws://localhost:8000/ws
 
 ### Development
 
-```bash
 # Start all services (server on port 8000, web app on port 3001)
+```bash
 bun run dev
+```
 
-# Start individual services
-bun run dev:web        # Start only the web application
-bun run dev:server     # Start only the MCP server
+# Start individual services: Web application
+```bash
+bun run dev:web
+```
+
+# Start individual services: MCP server
+```bash
+bun run dev:server
 ```
 
 ### Production
 
-```bash
 # Build all applications for production
+```bash
 bun run build
+```
 
 # Start production servers
+```bash
 bun run start
 ```
 
@@ -225,29 +247,50 @@ Collects validated user input through interactive modal forms.
 
 ## Development Workflow
 
+# Lint all code
 ```bash
-# Code quality checks
-bun run lint          # Lint all code
-bun run check-types   # TypeScript validation across monorepo
+bun run lint
+```
 
-# Development
-bun run dev           # Start all development services
-bun run dev:web       # Start web app only
-bun run dev:server    # Start server only
+# TypeScript validation across monorepo
+```bash
+bun run check-types
+```
 
-# Build validation
-bun run build         # Build all applications
+# Start all development services
+```bash
+bun run dev
+```
+
+# Start web app only
+```bash
+bun run dev:web
+```
+
+# Start server only
+```bash
+bun run dev:server
+```
+
+# Build all applications
+```bash
+bun run build
 ```
 
 ## Testing
 
 ### Running Tests
-```bash
+
 # Run Python server tests
+```bash
 cd apps/server
+```
+```bash
 bun run test
+```
 
 # Run with coverage
+```bash
 bun run test --cov=src/browtrix_server
 ```
 
@@ -301,36 +344,52 @@ This project uses Biome for code formatting and linting. Ensure your code passes
 
 ```bash
 bun run lint
+```
+```bash
 bun run check-types
 ```
 
 ## Environment Setup
 
 ### Development Environment
-```bash
+
 # Install dependencies
+```bash
 bun install
+```
 
 # Start development servers
+```bash
 bun run dev
+```
 
 # Verify server connection
+```bash
 curl http://localhost:8000/health
+```
 
 # Verify web application
+```bash
 curl http://localhost:3001/api/health
 ```
 
 ### Production Environment
-```bash
+
 # Build production bundles
+```bash
 bun run build
+```
 
 # Start production servers
+```bash
 bun run start
+```
 
 # Health checks
+```bash
 curl http://localhost:8000/health
+```
+```bash
 curl http://localhost:3001/api/health
 ```
 
@@ -360,5 +419,3 @@ For support and questions:
 - Check the [documentation](./docs/)
 - Review the MCP server [API documentation](./apps/server)
 - Check health endpoints for service status
-
----
